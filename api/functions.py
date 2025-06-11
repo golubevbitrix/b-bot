@@ -7,6 +7,14 @@ import time
 
 #connection_string = 'postgresql://neondb_owner:npg_rzqOTvaJiP01@ep-frosty-morning-a2z2rgqi-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
 connection_string = 'postgresql://neondb_owner:npg_ZEKV2AOWjyp9@ep-raspy-rice-a26lcgy9-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
+
+def handler(request):
+  request = unquote(request)
+  chat = re.search('\[message\]\[chat_id\]=(.+?)&', request).group(1)
+  user = re.search('\[message\]\[user_id\]=(.+?)&', request).group(1)
+  if chat:
+    delete_chat(chat)
+    
 def chat_code(request):
   data = {}
   request = unquote(request)
@@ -46,6 +54,13 @@ async def handle_new_message(request):
   code = chat_code(request)
   chat = await chat_id(code)
   response = await update_chat(chat)
+
+async def delete_chat(chat):
+  pool = await asyncpg.create_pool(connection_string)
+  statement = f"DELETE * FROM chats WHERE id = '{chat}'"
+  async with pool.acquire() as conn:
+    await conn.execute(statement)
+  await pool.close()
 #def find(array, term):
   #for i in array:
     #if 
