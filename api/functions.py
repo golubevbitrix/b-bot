@@ -22,7 +22,7 @@ async def chat_id(code):
     data = {"USER_CODE": code}
     response = await client.post('https://b24-dqlsji.bitrix24.ru/rest/1/s8xdt6lup9f63cj2/imopenlines.session.open', data=data)
     response = response.json()
-    return srt(response["result"]["chatId"])
+    return str(response["result"]["chatId"])
     
 async def update_chat(chat):
     pool = await asyncpg.create_pool(connection_string)
