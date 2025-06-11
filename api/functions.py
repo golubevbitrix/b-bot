@@ -15,6 +15,7 @@ def chat_code(request):
   data['chat'] = re.search('\[chat_id\]=(.+?)&', request).group(1)
   data['user'] = re.search('data\[DATA\]\[connector\]\[user_id\]=(.+?)&', request).group(1)
   code = '|'.join(data.values())
+  print(code)
   return code
 
 async def chat_id(code):
