@@ -10,13 +10,15 @@ connection_string = 'postgresql://neondb_owner:npg_ZEKV2AOWjyp9@ep-raspy-rice-a2
 def chat_code(request):
   data = {}
   request = unquote(request)
-  data['connector'] = re.search('\[connector_id\]=(.+?)&', request).group(1)
-  data['line'] = re.search('\[line_id\]=(.+?)&', request).group(1)
-  data['chat'] = re.search('\[chat_id\]=(.+?)&', request).group(1)
-  data['user'] = re.search('data\[DATA\]\[connector\]\[user_id\]=(.+?)&', request).group(1)
-  code = '|'.join(data.values())
-  print(code)
-  return code
+  data['connector']['id'] = re.search('\[connector_id\]=(.+?)&', request).group(1)
+  data['connector']['line'] = re.search('\[connector\]\[line_id\]=(.+?)&', request).group(1)
+  data['connector']['chat'] = re.search('\[connector\]\[chat_id\]=(.+?)&', request).group(1)
+  data['connector']['user'] = re.search('data\[DATA\]\[connector\]\[user_id\]=(.+?)&', request).group(1)
+  data['code'] = '|'.join(data['connector'].values())
+  data['chat'] = re.search('\[message\]\[chat_id\]=(.+?)&', request).group(1)
+  data['user'] = re.search('\[message\]\[user_id\]=(.+?)&', request).group(1)
+  
+  return data
 
 async def chat_id(code):
   async with httpx.AsyncClient() as client:
