@@ -33,7 +33,7 @@ async def update_chat(chat):
       INSERT INTO chats (id, time)
       VALUES ('{chat}', '{timestamp}')
       ON CONFLICT (id)
-      DO NOTHING | DO UPDATE SET id = '{chat}', time = '{timestamp}';
+      DO UPDATE SET id = '{chat}', time = '{timestamp}';
     """
     async with pool.acquire() as conn:
     # Execute a statement to create a new table.
