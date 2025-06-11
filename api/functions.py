@@ -23,6 +23,7 @@ async def chat_id(code):
     data = {"USER_CODE": f'"{code}"'}
     response = await client.post('https://b24-dqlsji.bitrix24.ru/rest/1/s8xdt6lup9f63cj2/imopenlines.session.open', data=data)
     response = response.json()
+    print(response)
     return str(response["result"]["chatId"])
     
 async def update_chat(chat):
