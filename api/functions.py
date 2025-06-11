@@ -10,9 +10,11 @@ connection_string = 'postgresql://neondb_owner:npg_ZEKV2AOWjyp9@ep-raspy-rice-a2
 
 def handler(request):
   request = unquote(request)
+  event = re.search('event=(.+?)&', request).group(1)
+  event = true if event
   chat = re.search('\[message\]\[chat_id\]=(.+?)&', request).group(1)
   user = re.search('\[message\]\[user_id\]=(.+?)&', request).group(1)
-  if chat:
+  if chat && event == 'ONOPENLINEMESSAGEADD' || event == 'ONSESSIONFINISH':
     delete_chat(chat)
     
 def chat_code(request):
