@@ -52,11 +52,20 @@ async def update_chat(chat):
         await conn.execute(statement)
     await pool.close()  
 
-async def handle_new_message(request):
-  code = chat_code(request)
-  chat = await chat_id(code)
-  response = await update_chat(chat)
-
+async def add_handler(request):
+  chat = re.search('\[message\]\[chat_id\]=(.+?)&', request).group(1)
+  if chat:
+    await delete_chat(chat)
+  else:
+    code = chat_code(request)
+    chat = await chat_id(code)
+    response = await update_chat(chat)
+    
+async def finish_handler(request):
+  chat = re.search('\[chat_id\]=(.+?)&', request).group(1)
+  if chat:
+    await delete_chat(chat)
+    
 async def delete_chat(chat):
   pool = await asyncpg.create_pool(connection_string)
   statement = f"DELETE * FROM chats WHERE id = '{chat}'"
