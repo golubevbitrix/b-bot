@@ -22,9 +22,9 @@ async def chat_id(code):
     data = {"USER_CODE": code}
     response = await client.post('https://b24-dqlsji.bitrix24.ru/rest/1/s8xdt6lup9f63cj2/imopenlines.session.open', data=data)
     response = response.json()
-    return response["result"]["chatId"]
+    return srt(response["result"]["chatId"])
     
-async def record_time(chat):
+async def update_chat(chat):
     pool = await asyncpg.create_pool(connection_string)
     timestamp = str(time.time())
     statement = f"""
@@ -38,7 +38,10 @@ async def record_time(chat):
         await conn.execute(statement)
     await pool.close()  
 
-async def update_message_time(
+async def handle_new_message(request):
+  code = chat_code(request)
+  chat = await chat_id(code)
+  response = await update_chat(chat)
 #def find(array, term):
   #for i in array:
     #if 
