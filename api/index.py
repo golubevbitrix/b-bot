@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
-from tgbot.main import tgbot
-from api.functions import chat_code, chat_id
+#from tgbot.main import tgbot
+from api.functions import handle_new_message
 from urllib.parse import unquote, urlparse
 
 app = FastAPI()
@@ -20,16 +20,16 @@ async def send_message(request: Request):
     print(request, unquote(body.decode()))
     print(urlparse(body.decode()))
     try:
-        print(chat_code(body.decode()))
+        await handle_new_message(body.decode())
     except Exception as e:
         print(e)
 
-    code = chat_code(body.decode())
-    id = await chat_id(code)
+    #code = chat_code(body.decode())
+    #id = await chat_id(code)
     print(id)
     #update_dict = await request.json()
     #print(update_dict)
-    await tgbot.send_message('A message sent')
+    #await tgbot.send_message('A message sent')
     return "post accepted"
 
 @app.get('/api/message')
