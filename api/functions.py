@@ -33,8 +33,8 @@ def chat_code(request):
   data['line'] = re.search('\[connector\]\[line_id\]=(.+?)&', request).group(1)
   data['chat'] = re.search('\[connector\]\[chat_id\]=(.+?)&', request).group(1)
   data['user'] = re.search('data\[DATA\]\[connector\]\[user_id\]=(.+?)&', request).group(1)
-  code = '|'.join(data['connector'].values())
-  
+  code = '|'.join(data.values())
+  print('code: ', code)
   return code
 
 async def chat_id(code):
@@ -42,7 +42,7 @@ async def chat_id(code):
     data = {"USER_CODE": code}
     response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.session.open', data=data)
     response = response.json()
-    print(response)
+    print('chatId: ', response)
     return str(response["result"]["chatId"])
     
 async def update_chat(chat):
