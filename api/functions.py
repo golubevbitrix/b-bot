@@ -15,24 +15,21 @@ def handler(request):
   chat = re.search('\[message\]\[chat_id\]=(.+?)&', request).group(1)
   user = re.search('\[message\]\[user_id\]=(.+?)&', request).group(1)
   if event == 'ONSESSIONFINISH':
-    chat = re.search('\[message\]\[chat_id\]=(.+?)&', request).group(1)
-    delete_chat(chat)
-  if event == 'ONOPENLINEMESSAGEADD':
+    finish_handler(request)
+  elif event == 'ONOPENLINEMESSAGEADD':
     add_handler(request)
       
     
 def chat_code(request):
   data = {}
   request = unquote(request)
-  data['connector']['id'] = re.search('\[connector_id\]=(.+?)&', request).group(1)
-  data['connector']['line'] = re.search('\[connector\]\[line_id\]=(.+?)&', request).group(1)
-  data['connector']['chat'] = re.search('\[connector\]\[chat_id\]=(.+?)&', request).group(1)
-  data['connector']['user'] = re.search('data\[DATA\]\[connector\]\[user_id\]=(.+?)&', request).group(1)
-  data['code'] = '|'.join(data['connector'].values())
-  data['chat'] = re.search('\[message\]\[chat_id\]=(.+?)&', request).group(1)
-  data['user'] = re.search('\[message\]\[user_id\]=(.+?)&', request).group(1)
+  data['id'] = re.search('\[connector_id\]=(.+?)&', request).group(1)
+  data['line'] = re.search('\[connector\]\[line_id\]=(.+?)&', request).group(1)
+  data['chat'] = re.search('\[connector\]\[chat_id\]=(.+?)&', request).group(1)
+  data['user'] = re.search('data\[DATA\]\[connector\]\[user_id\]=(.+?)&', request).group(1)
+  code = '|'.join(data['connector'].values())
   
-  return data
+  return code
 
 async def chat_id(code):
   async with httpx.AsyncClient() as client:
