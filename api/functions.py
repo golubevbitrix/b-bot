@@ -8,7 +8,7 @@ import time
 #connection_string = 'postgresql://neondb_owner:npg_rzqOTvaJiP01@ep-frosty-morning-a2z2rgqi-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
 connection_string = 'postgresql://neondb_owner:npg_ZEKV2AOWjyp9@ep-raspy-rice-a26lcgy9-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
 
-async def request_handler(request):
+async def hook_handler(request):
   request = unquote(request)
   event = re.search('event=(.+?)&', request).group(1)
   #event = true if event
