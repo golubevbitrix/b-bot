@@ -47,7 +47,7 @@ async def chat_id(code):
     
 async def update_chat(chat, line, user):
     pool = await asyncpg.create_pool(connection_string)
-    timestamp = str(time.time())
+    timestamp = str(int(time.time()))
     statement = f"""
       INSERT INTO chats (id, time, line, user_id)
       VALUES ('{chat}', '{timestamp}', '{line}', '{user}')
