@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request
 #from tgbot.main import tgbot
 from api.functions import hook_handler
+from api.check import update_handler
 from urllib.parse import unquote, urlparse
 
 app = FastAPI()
@@ -36,3 +37,7 @@ async def send_message(request: Request):
 async def send_message(request: Request):
     #await tgbot.send_message('A message sent')
     return "hello"
+
+@app.get('/api/update')
+async def update(request: Request):
+    await update_handler()
