@@ -40,9 +40,12 @@ async def update_handler():
     await pool.close()  
 
 async def change_user(chat, user):
+    print("change user: started..")
     async with httpx.AsyncClient() as client:
+      print("change user: connection..")
       data = {"CHAT_ID": chat, "TRANSFER_ID": user}
       try:
+          print("change user: posting..")
           response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.operator.transfer', data=data)
           response = response.json()
           print('transfer response: ', response)
