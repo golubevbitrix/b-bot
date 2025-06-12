@@ -31,6 +31,7 @@ async def update_handler():
                 for line in lines[row["line"]]:
                     print(line, user, user == line)
                 user = lines[row["line"]].remove(str(user))
+                user = user[0]
                 print('line: ', lines[row["line"]])
                 print('user: ', user)
                 #await change_user(row["chat"], user)
