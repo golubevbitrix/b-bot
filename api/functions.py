@@ -8,17 +8,22 @@ import time
 #connection_string = 'postgresql://neondb_owner:npg_rzqOTvaJiP01@ep-frosty-morning-a2z2rgqi-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
 connection_string = 'postgresql://neondb_owner:npg_ZEKV2AOWjyp9@ep-raspy-rice-a26lcgy9-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
 
-def handler(request):
+async def request_handler(request):
   request = unquote(request)
   event = re.search('event=(.+?)&', request).group(1)
   #event = true if event
   chat = re.search('\[message\]\[chat_id\]=(.+?)&', request).group(1)
   user = re.search('\[message\]\[user_id\]=(.+?)&', request).group(1)
   if event == 'ONSESSIONFINISH':
-    finish_handler(request)
+    try:
+      await finish_handler(request)
+    except Exception as e:
+      print(e)
   elif event == 'ONOPENLINEMESSAGEADD':
-    add_handler(request)
-      
+    try:
+      await add_handler(request)
+    except Exception as e:
+      print(e)  
     
 def chat_code(request):
   data = {}
