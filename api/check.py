@@ -27,7 +27,7 @@ async def update_handler():
                 print('queue: ', lines[row["line"]])
                 user = row["user_id"]
                 print('user :', user)
-                user = lines[row["line"]].remove(user)
+                user = lines[row["line"]].remove(str(user))
                 
                 print('user: ', user)
                 #await change_user(row["chat"], user)
