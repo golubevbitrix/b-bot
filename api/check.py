@@ -17,7 +17,9 @@ async def update_handler():
     # Execute a statement to create a new table.
         data = await conn.execute(statement)
         data = [dict(row) for row in data]
+        print(data)
         for row in data:
+            print(row)
             print(timestamp - int(row["time"]))
             if timestamp - int(row["time"]) > 54:
                 user = lines[row["line"]].remove(row["user"])[0]
@@ -41,5 +43,6 @@ async def get_lines():
           data = {"CONFIG_ID": line["id"]}
           response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.config.get', data=data)
           result = response.json()["result"]
-          lines[result["id"] = result["QUEUE"]
+          lines[result["id"]] = result["QUEUE"]
+          print(lines)
       return lines
