@@ -18,6 +18,7 @@ async def update_handler():
         data = await conn.execute(statement)
         data = [dict(row) for row in data]
         for row in data:
+            print(timestamp - int(row["time"]))
             if timestamp - int(row["time"]) > 54:
                 user = lines[row["line"]].remove(row["user"])[0]
                 print(user)
