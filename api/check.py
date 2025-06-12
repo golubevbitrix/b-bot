@@ -39,7 +39,9 @@ async def get_lines():
       lines = {}
       response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.config.list.get')
       json = response.json()
+    
       for line in json["result"]:
+          print(line)
           data = {"CONFIG_ID": line["id"]}
           response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.config.get', data=data)
           result = response.json()["result"]
