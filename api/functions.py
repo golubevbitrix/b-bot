@@ -11,6 +11,7 @@ connection_string = 'postgresql://neondb_owner:npg_ZEKV2AOWjyp9@ep-raspy-rice-a2
 async def hook_handler(request):
   request = unquote(request)
   event = re.search('event=(.+?)&', request).group(1)
+  print(type(event), event)
   #event = true if event
   #chat = re.search('\[message\]\[chat_id\]=(.+?)&', request).group(1)
   #user = re.search('\[message\]\[user_id\]=(.+?)&', request).group(1)
@@ -69,7 +70,7 @@ async def add_handler(request):
     response = await update_chat(chat)
     
 async def finish_handler(request):
-  chat = re.search('\[chat_id\]=(.+?)&', request).group(1)
+  chat = re.search('\[chat_id\]=(.+?)&', request)
   if chat:
     await delete_chat(chat.group(1))
     
