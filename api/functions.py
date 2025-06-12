@@ -45,14 +45,14 @@ async def chat_id(code):
     print('chatId: ', response)
     return str(response["result"]["chatId"])
     
-async def update_chat(chat):
+async def update_chat(chat, line, user):
     pool = await asyncpg.create_pool(connection_string)
     timestamp = str(time.time())
     statement = f"""
-      INSERT INTO chats (id, time)
-      VALUES ('{chat}', '{timestamp}')
+      INSERT INTO chats (id, time, line, user)
+      VALUES ('{chat}', '{timestamp}', '{line}', '{user}')
       ON CONFLICT (id)
-      DO UPDATE SET id = '{chat}', time = '{timestamp}';
+      DO UPDATE SET id = '{chat}', time = '{timestamp}', line = '{line}', user = '{user}';
     """
     async with pool.acquire() as conn:
     # Execute a statement to create a new table.
@@ -67,7 +67,9 @@ async def add_handler(request):
   else:
     code = chat_code(request)
     chat = await chat_id(code)
-    response = await update_chat(chat)
+    line = data['line'] = re.search('\[connector\]\[line_id\]=(.+?)&', request).group(1)
+    user = data['user'] = re.search('data\[DATA\]\[connector\]\[user_id\]=(.+?)&', request).group(1)  
+    response = await update_chat(chat, line, user)
     
 async def finish_handler(request):
   chat = re.search('\[chat_id\]=(.+?)&', request)
