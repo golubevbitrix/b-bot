@@ -80,7 +80,7 @@ async def finish_handler(request):
     
 async def delete_chat(chat):
   pool = await asyncpg.create_pool(connection_string)
-  statement = f"DELETE * FROM chats WHERE id = '{chat}'"
+  statement = f"DELETE FROM chats WHERE id = '{chat}'"
   async with pool.acquire() as conn:
     await conn.execute(statement)
   await pool.close()
