@@ -42,9 +42,12 @@ async def update_handler():
 async def change_user(chat, user):
     async with httpx.AsyncClient() as client:
       data = {"CHAT_ID": chat, "TRANSFER_ID": user}
-      response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.operator.transfer', data=data)
-      response = response.json()
-      print('transfer response: ', response)
+      try:
+          response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.operator.transfer', data=data)
+          response = response.json()
+          print('transfer response: ', response)
+      except Exception as e:
+          print('transfer exception: ', e)
         
 async def get_lines():
     async with httpx.AsyncClient() as client:
