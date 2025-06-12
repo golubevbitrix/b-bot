@@ -49,10 +49,10 @@ async def update_chat(chat, line, user):
     pool = await asyncpg.create_pool(connection_string)
     timestamp = str(time.time())
     statement = f"""
-      INSERT INTO chats (id, time, line, user)
+      INSERT INTO chats (id, time, line, user_id)
       VALUES ('{chat}', '{timestamp}', '{line}', '{user}')
       ON CONFLICT (id)
-      DO UPDATE SET id = '{chat}', time = '{timestamp}', line = '{line}', user = '{user}';
+      DO UPDATE SET id = '{chat}', time = '{timestamp}', line = '{line}', user_id = '{user}';
     """
     async with pool.acquire() as conn:
     # Execute a statement to create a new table.
