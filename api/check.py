@@ -35,8 +35,12 @@ async def update_handler():
                 user = queue[0]
                 print('line: ', lines[row["line"]])
                 print('user: ', user)
-                await change_user(row["chat"], user)
-                await delete_chat(row["chat"])
+                try:
+                    await change_user(row["chat"], user)
+                except Exception as e:
+                    print('call exception: ', e)
+        
+                #await delete_chat(row["chat"])
     await pool.close()  
 
 async def change_user(chat, user):
