@@ -16,3 +16,16 @@ async def update_chat(chat):
         data = [dict(row) for row in data]
         
     await pool.close()  
+
+async def change_user(chat, user):
+    async with httpx.AsyncClient() as client:
+      data = {"CHAT_ID": chat, "TRANSFER_ID": user}
+      response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.operator.transfer', data=data)
+      response = response.json()
+
+async def get_users_on_line(line):
+    async with httpx.AsyncClient() as client:
+      data = {"CONFIG_ID": line}
+      response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.config.get', data=data)
+      response = response.json()
+    
