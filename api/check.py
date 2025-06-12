@@ -42,9 +42,9 @@ async def get_lines():
     
       for line in json["result"]:
           print(line)
-          data = {"CONFIG_ID": line["id"]}
+          data = {"CONFIG_ID": line["ID"]}
           response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.config.get', data=data)
           result = response.json()["result"]
-          lines[result["id"]] = result["QUEUE"]
+          lines[result["ID"]] = result["QUEUE"]
           print(lines)
       return lines
