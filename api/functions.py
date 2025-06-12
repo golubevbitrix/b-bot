@@ -12,8 +12,8 @@ async def hook_handler(request):
   request = unquote(request)
   event = re.search('event=(.+?)&', request).group(1)
   #event = true if event
-  chat = re.search('\[message\]\[chat_id\]=(.+?)&', request).group(1)
-  user = re.search('\[message\]\[user_id\]=(.+?)&', request).group(1)
+  #chat = re.search('\[message\]\[chat_id\]=(.+?)&', request).group(1)
+  #user = re.search('\[message\]\[user_id\]=(.+?)&', request).group(1)
   if event == 'ONSESSIONFINISH':
     try:
       await finish_handler(request)
@@ -59,9 +59,10 @@ async def update_chat(chat):
     await pool.close()  
 
 async def add_handler(request):
-  chat = re.search('\[message\]\[chat_id\]=(.+?)&', request).group(1)
+  chat = re.search('\[message\]\[chat_id\]=(.+?)&', request)
+  
   if chat:
-    await delete_chat(chat)
+    await delete_chat(chat.group(1))
   else:
     code = chat_code(request)
     chat = await chat_id(code)
@@ -70,7 +71,7 @@ async def add_handler(request):
 async def finish_handler(request):
   chat = re.search('\[chat_id\]=(.+?)&', request).group(1)
   if chat:
-    await delete_chat(chat)
+    await delete_chat(chat.group(1))
     
 async def delete_chat(chat):
   pool = await asyncpg.create_pool(connection_string)
