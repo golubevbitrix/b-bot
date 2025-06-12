@@ -26,6 +26,7 @@ async def update_handler():
             if timestamp - int(row["time"]) > 240:
                 print('queue: ', lines[row["line"]])
                 user = row["user_id"]
+                print('user :', user)
                 user = lines[row["line"]].remove(user)
                 
                 print('user: ', user)
