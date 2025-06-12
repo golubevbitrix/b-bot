@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 #from tgbot.main import tgbot
-from api.functions import handler
+from api.functions import hook_handler
 from urllib.parse import unquote, urlparse
 
 app = FastAPI()
@@ -26,7 +26,7 @@ async def send_message(request: Request):
 
     #code = chat_code(body.decode())
     #id = await chat_id(code)
-    print(id)
+    #print(id)
     #update_dict = await request.json()
     #print(update_dict)
     #await tgbot.send_message('A message sent')
