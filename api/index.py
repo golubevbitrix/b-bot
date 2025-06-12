@@ -40,4 +40,7 @@ async def send_message(request: Request):
 
 @app.get('/api/update')
 async def update(request: Request):
-    await update_handler()
+    try:
+        await update_handler()
+    except Exception as e:
+        print(e)
