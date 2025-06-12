@@ -24,8 +24,9 @@ async def update_handler():
             print(row)
             print(timestamp - int(row["time"]))
             if timestamp - int(row["time"]) > 54:
+                print('queue: ', lines[row["line"]])
                 user = lines[row["line"]].remove(row["user_id"])[0]
-                print(user)
+                print('user: ', user)
                 await change_user(row["chat"], user)
     await pool.close()  
 
