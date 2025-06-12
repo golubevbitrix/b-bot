@@ -1,4 +1,5 @@
 from urllib.parse import unquote
+from api.functions import delete_chat
 import httpx
 import re
 import asyncio
@@ -10,16 +11,17 @@ connection_string = 'postgresql://neondb_owner:npg_ZEKV2AOWjyp9@ep-raspy-rice-a2
 
 async def update_handler():
     pool = await asyncpg.create_pool(connection_string)
-    timestamp = time.time()
+    timestamp = int(time.time())
     lines = await get_lines()
     async with pool.acquire() as conn:
     # Execute a statement to create a new table.
         data = await conn.execute(statement)
         data = [dict(row) for row in data]
         for row in data:
-            user = lines[row["line"]].remove(row["user"])[0]
-            print(user)
-            await change_user(row["chat"], user)
+            if timestamp - int(row["time"]) > 54:
+                user = lines[row["line"]].remove(row["user"])[0]
+                print(user)
+                await change_user(row["chat"], user)
     await pool.close()  
 
 async def change_user(chat, user):
