@@ -20,7 +20,7 @@ async def send_message(request: Request):
     print(request, unquote(body.decode()))
     print(urlparse(body.decode()))
     try:
-        await handler(body.decode())
+        await hook_handler(body.decode())
     except Exception as e:
         print(e)
 
