@@ -13,6 +13,7 @@ async def update_handler():
     pool = await asyncpg.create_pool(connection_string)
     timestamp = int(time.time())
     lines = await get_lines()
+    statement= "SELECT * FROM chats"
     async with pool.acquire() as conn:
     # Execute a statement to create a new table.
         data = await conn.execute(statement)
