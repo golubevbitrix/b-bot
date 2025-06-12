@@ -36,11 +36,11 @@ async def update_handler():
                 print('line: ', lines[row["line"]])
                 print('user: ', user)
                 try:
-                    await change_user(row["chat"], user)
+                    await change_user(row["id"], user)
                 except Exception as e:
                     print('call exception: ', e)
-        
-                #await delete_chat(row["chat"])
+                
+                await delete_chat(row["chat"])
     await pool.close()  
 
 async def change_user(chat, user):
