@@ -40,7 +40,7 @@ async def update_handler():
                 except Exception as e:
                     print('call exception: ', e)
                 
-                await conn.execute(f"DELETE FROM chats WHERE id = '{row["id"]}'")
+                await conn.execute(f"UPDATE chats SET time = '{str(timestamp)}' WHERE id = '{row["id"]}'")
     await pool.close()  
 
 async def change_user(chat, user):
