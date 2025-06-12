@@ -16,7 +16,8 @@ async def update_chat(chat):
         data = await conn.execute(statement)
         data = [dict(row) for row in data]
         for row in data:
-            
+            user = lines[row["row"]].remove(row["user"])[0]
+            print
     await pool.close()  
 
 async def change_user(chat, user):
@@ -27,12 +28,12 @@ async def change_user(chat, user):
         
 async def get_lines():
     async with httpx.AsyncClient() as client:
-      lines = []
+      lines = {}
       response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.config.list.get')
       json = response.json()
       for line in json["result"]:
           data = {"CONFIG_ID": line["id"]}
           response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.config.get', data=data)
           result = response.json()["result"]
-          lines.append({"id":result["id"], "queue": result["QUEUE"]})
+          lines[result["id"] = result["QUEUE"]
       return lines
