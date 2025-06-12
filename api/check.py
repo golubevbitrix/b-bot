@@ -7,7 +7,8 @@ import time
 
 #connection_string = 'postgresql://neondb_owner:npg_rzqOTvaJiP01@ep-frosty-morning-a2z2rgqi-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
 connection_string = 'postgresql://neondb_owner:npg_ZEKV2AOWjyp9@ep-raspy-rice-a26lcgy9-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
-async def update_chat(chat):
+
+async def update_handler():
     pool = await asyncpg.create_pool(connection_string)
     timestamp = time.time()
     lines = await get_lines()
@@ -16,8 +17,9 @@ async def update_chat(chat):
         data = await conn.execute(statement)
         data = [dict(row) for row in data]
         for row in data:
-            user = lines[row["row"]].remove(row["user"])[0]
-            print
+            user = lines[row["line"]].remove(row["user"])[0]
+            print(user)
+            await change_user(row["chat"], user)
     await pool.close()  
 
 async def change_user(chat, user):
@@ -25,6 +27,7 @@ async def change_user(chat, user):
       data = {"CHAT_ID": chat, "TRANSFER_ID": user}
       response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.operator.transfer', data=data)
       response = response.json()
+      print(response)
         
 async def get_lines():
     async with httpx.AsyncClient() as client:
