@@ -40,10 +40,10 @@ def chat_code(request):
 async def chat_id(code):
   async with httpx.AsyncClient() as client:
     data = {"USER_CODE": code}
-    response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.session.open', data=data)
+    response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.dialog.get', data=data)
     response = response.json()
     print('chatId: ', response)
-    return str(response["result"]["chatId"])
+    return {"chat": str(response["result"]["id"]), "user": str(response["result"]["owner"])}
     
 async def update_chat(chat, line, user):
     pool = await asyncpg.create_pool(connection_string)
@@ -66,10 +66,12 @@ async def add_handler(request):
     await delete_chat(chat.group(1))
   else:
     code = chat_code(request)
-    chat = await chat_id(code)
+    data = await chat_id(code)
+    chat = data["chat"]
     line = re.search('\[connector\]\[line_id\]=(.+?)&', request).group(1)
-    user = re.search('data\[DATA\]\[connector\]\[user_id\]=(.+?)&', request).group(1)  
-    response = await update_chat(chat, line, user)
+    user = data["user"]
+    if user != '0':
+        await update_chat(chat, line, user)
     
 async def finish_handler(request):
   chat = re.search('\[chat_id\]=(.+?)&', request)
