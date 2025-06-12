@@ -16,9 +16,10 @@ async def update_handler():
     statement= "SELECT * FROM chats"
     async with pool.acquire() as conn:
     # Execute a statement to create a new table.
-        data = await conn.execute(statement)
+        data = await conn.fetachall(statement)
+        print('fetch result: ', data)
         data = [dict(row) for row in data]
-        print(data)
+        print('table: ', data)
         for row in data:
             print(row)
             print(timestamp - int(row["time"]))
