@@ -84,6 +84,7 @@ async def delete_chat(chat):
   async with pool.acquire() as conn:
     await conn.execute(statement)
   await pool.close()
+  print('chat ', chat, ' deleted')
 #def find(array, term):
   #for i in array:
     #if 
