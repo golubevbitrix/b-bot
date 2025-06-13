@@ -81,9 +81,12 @@ async def finish_handler(request):
 async def delete_chat(chat):
   pool = await asyncpg.create_pool(connection_string)
   statement = f"DELETE FROM chats WHERE id = '{chat}'"
+  print(statement)
+  if chat == '79':
+    statement = "DELETE FROM chats WHERE id = '79'"
   async with pool.acquire() as conn:
     await conn.execute(statement)
-    response = await conn.fetch(f"SELECT * FROM chats WHERE id = '{chat}'")
+    response = await conn.fetchall("SELECT * FROM chats")
     print(response)
   await pool.close()
   print('chat ', chat, ' deleted')
