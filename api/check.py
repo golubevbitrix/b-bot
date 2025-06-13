@@ -27,7 +27,7 @@ async def update_handler():
         for row in data:
             print(row)
             print(timestamp - int(row["time"]))
-            if timestamp - int(row["time"]) > 240 && row["active"] == 'Y':
+            if timestamp - int(row["time"]) > 240 and row["active"] == 'Y':
                 print('queue: ', lines[row["line"]])
                 user = row["user_id"]
                 queue = lines[row["line"]]
