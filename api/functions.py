@@ -49,10 +49,10 @@ async def update_chat(chat, line, user):
     pool = await asyncpg.create_pool(connection_string)
     timestamp = str(int(time.time()))
     statement = f"""
-      INSERT INTO chats (id, time, line, user_id)
-      VALUES ('{chat}', '{timestamp}', '{line}', '{user}')
+      INSERT INTO chats (id, time, line, user_id, active)
+      VALUES ('{chat}', '{timestamp}', '{line}', '{user}', 'Y')
       ON CONFLICT (id)
-      DO UPDATE SET id = '{chat}', time = '{timestamp}', line = '{line}', user_id = '{user}';
+      DO UPDATE SET id = '{chat}', time = '{timestamp}', line = '{line}', user_id = '{user}', active = 'Y';
     """
     async with pool.acquire() as conn:
     # Execute a statement to create a new table.
@@ -80,7 +80,7 @@ async def finish_handler(request):
     
 async def delete_chat(chat):
   pool = await asyncpg.create_pool(connection_string)
-  statement = f"DELETE FROM chats WHERE id = '{chat}'"
+  statement = f"UPDATE chats SET active = 'N' WHERE id = '{chat}'"
   print(statement)
   if chat == '79':
     statement = "DELETE FROM chats WHERE id = '79'"
