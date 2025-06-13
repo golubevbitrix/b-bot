@@ -24,7 +24,8 @@ async def update_handler():
         print('fetch result: ', data)
         data = [dict(row) for row in data]
         print('table: ', data)
-        for row in data:
+    await pool.close()
+    for row in data:
             print(row)
             print(timestamp - int(row["time"]))
             if timestamp - int(row["time"]) > 240 and row["active"] == 'Y':
@@ -45,7 +46,7 @@ async def update_handler():
                     print('call exception: ', e)
                 
                 await conn.execute(f"UPDATE chats SET time = '{str(timestamp)}', user_id = '{str(user)}' WHERE id = '{row["id"]}'")
-    await pool.close()  
+      
 
 async def change_user(chat, user):
     print("change user: started..")
@@ -67,7 +68,7 @@ async def get_lines():
       json = response.json()
     
       for line in json["result"]:
-          print(line)
+          #print(line)
           data = {"CONFIG_ID": line["ID"]}
           response = await client.post('https://bitrix.abramovteam.ru/rest/1/0bwuq2j93zpaxkie/imopenlines.config.get', data=data)
           result = response.json()["result"]
