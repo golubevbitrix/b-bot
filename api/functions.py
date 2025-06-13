@@ -83,7 +83,7 @@ async def delete_chat(chat):
   statement = f"DELETE FROM chats WHERE id = '{chat}'"
   async with pool.acquire() as conn:
     await conn.execute(statement)
-    response = conn.fetch(f"SELECT * FROM chats WHERE id = '{chat}'")
+    response = await conn.fetch(f"SELECT * FROM chats WHERE id = '{chat}'")
     print(response)
   await pool.close()
   print('chat ', chat, ' deleted')
