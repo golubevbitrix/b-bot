@@ -27,7 +27,7 @@ async def redis_update_handler():
             row = dict(r.hgetall(key))
             print(row)
             print(timestamp - int(row["time"]))
-            if timestamp - int(row["time"]) > 240 and row["active"] == 'Y':
+            if timestamp - int(row["time"]) > 240:
                 print('queue: ', lines[row["line"]])
                 user = row["user_id"]
                 queue = lines[row["line"]]
@@ -39,7 +39,7 @@ async def redis_update_handler():
                 user = queue[0]
                 print('line: ', lines[row["line"]])
                 print('user: ', user)
-                r.hset(key, mapping={"time": timestamp,"user": user, "line": row["line"]})
+                r.hset(key, mapping={"time": str(timestamp),"user": str(user), "line": str(row["line"])})
                 try:
                     await change_user(row["id"], user)
                 except Exception as e:
