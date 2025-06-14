@@ -39,7 +39,7 @@ async def redis_update_handler():
                 user = queue[0]
                 print('line: ', lines[row["line"]])
                 print('user: ', user)
-                r.hset(key, mapping={"time": timestamp,"user": user, "line": row["line"])
+                r.hset(key, mapping={"time": timestamp,"user": user, "line": row["line"]})
                 try:
                     await change_user(row["id"], user)
                 except Exception as e:
