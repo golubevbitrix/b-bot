@@ -58,7 +58,7 @@ async def chat_id(code):
     
 async def update_chat(chat, line, user):
     pool = await asyncpg.create_pool(connection_string)
-    redis = redis.Redis(redis_url)
+    r = redis.Redis(redis_url)
     timestamp = int(time.time())
     timestamp = str(int(time.time()))
     statement = f"""
@@ -67,7 +67,7 @@ async def update_chat(chat, line, user):
       ON CONFLICT (id)
       DO UPDATE SET id = '{chat}', time = '{timestamp}', line = '{line}', user_id = '{user}', active = 'Y';
     """
-    redis.hset(chat, mapping={"time": timestamp, "line": line, "user": user})
+    r.hset(chat, mapping={"time": timestamp, "line": line, "user": user})
     async with pool.acquire() as conn:
     # Execute a statement to create a new table.
         await conn.execute(statement)
@@ -96,8 +96,8 @@ async def finish_handler(request):
     
 async def delete_chat(chat):
   pool = await asyncpg.create_pool(connection_string)
-  redis = redis.Redis(redis_url)
-  redis.delete(chat)
+  r = redis.Redis(redis_url)
+  r.delete(chat)
   statement = f"UPDATE chats SET active = 'N' WHERE id = '{chat}'"
   print(statement)
   #if chat == '79':
