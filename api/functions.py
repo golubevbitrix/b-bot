@@ -2,11 +2,21 @@ from urllib.parse import unquote
 import httpx
 import re
 import asyncio
+import aioredis
 import asyncpg
 import time
+import os
+from dotenv import load_dotenv
 
+load_dotenv(dotenv_path=".env")
+api = os.getenv("api")
+connection_string = os.getenv("postgresql")
 #connection_string = 'postgresql://neondb_owner:npg_rzqOTvaJiP01@ep-frosty-morning-a2z2rgqi-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
-connection_string = 'postgresql://neondb_owner:npg_ZEKV2AOWjyp9@ep-raspy-rice-a26lcgy9-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
+#connection_string = 'postgresql://neondb_owner:npg_ZEKV2AOWjyp9@ep-raspy-rice-a26lcgy9-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
+load_dotenv(dotenv_path=".env.local")
+redis_url = os.getenv("REDIS_URL")
+#connection_string = 'postgresql://neondb_owner:npg_rzqOTvaJiP01@ep-frosty-morning-a2z2rgqi-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
+#connection_string = 'postgresql://neondb_owner:npg_ZEKV2AOWjyp9@ep-raspy-rice-a26lcgy9-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
 
 async def hook_handler(request):
   request = unquote(request)
@@ -47,6 +57,8 @@ async def chat_id(code):
     
 async def update_chat(chat, line, user):
     pool = await asyncpg.create_pool(connection_string)
+    redis = aioredis.from_url(redis_url)
+    timestamp = int(time.time())
     timestamp = str(int(time.time()))
     statement = f"""
       INSERT INTO chats (id, time, line, user_id, active)
@@ -54,6 +66,7 @@ async def update_chat(chat, line, user):
       ON CONFLICT (id)
       DO UPDATE SET id = '{chat}', time = '{timestamp}', line = '{line}', user_id = '{user}', active = 'Y';
     """
+    redis.hset(chat, {"time": timestamp, "line": line, "user": user})
     async with pool.acquire() as conn:
     # Execute a statement to create a new table.
         await conn.execute(statement)
@@ -65,11 +78,13 @@ async def add_handler(request):
   if chat:
     await delete_chat(chat.group(1))
   else:
-    code = chat_code(request)
-    data = await chat_id(code)
-    chat = data["chat"]
+    #code = chat_code(request)
+    #data = await chat_id(code)
+    #chat = data["chat"]
+    chat = re.search('\[chat_id\]=(.+?)&', request).group(1)
     line = re.search('\[connector\]\[line_id\]=(.+?)&', request).group(1)
-    user = data["user"]
+    #user = data["user"]
+    user = re.search('\[user_id\]=(.+?)&', request).group(1)
     if user != '0':
         await update_chat(chat, line, user)
     
@@ -80,10 +95,12 @@ async def finish_handler(request):
     
 async def delete_chat(chat):
   pool = await asyncpg.create_pool(connection_string)
+  redis = aioredis.from_url(redis_url)
+  redis.delete(chat)
   statement = f"UPDATE chats SET active = 'N' WHERE id = '{chat}'"
   print(statement)
-  if chat == '79':
-    statement = "DELETE FROM chats WHERE id = '79'"
+  #if chat == '79':
+    #statement = "DELETE FROM chats WHERE id = '79'"
   async with pool.acquire() as conn:
     response = await conn.execute(statement)
     #response = await conn.fetchall("SELECT * FROM chats")
