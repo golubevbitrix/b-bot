@@ -2,3 +2,5 @@ aiogram
 fastapi
 asyncpg
 httpx
+aioredis
+dotenv
