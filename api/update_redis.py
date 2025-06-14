@@ -45,7 +45,7 @@ async def redis_update_handler():
                 except Exception as e:
                     print('call exception: ', e)
                 
-                await conn.execute(f"UPDATE chats SET time = '{str(timestamp)}', user_id = '{str(user)}' WHERE id = '{row["id"]}'")
+                #await conn.execute(f"UPDATE chats SET time = '{str(timestamp)}', user_id = '{str(user)}' WHERE id = '{row["id"]}'")
       
     
 async def change_user(chat, user):
