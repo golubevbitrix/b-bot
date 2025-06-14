@@ -85,7 +85,7 @@ async def add_handler(request):
     print('add_handler: ')
     chat = re.search('\[chat_id\]=(.+?)&', request).group(1)
     print('chat: ', chat)
-    line = re.search('\[connector\]\[line_id\]=(.+?)&', request).group(1)
+    line = re.search('\[line_id\]=(.+?)&', request).group(1)
     print('line: ', line)
     #user = data["user"]
     user = re.search('\[user_id\]=(.+?)&', request).group(1)
