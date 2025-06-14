@@ -6,6 +6,7 @@ import aioredis
 import asyncpg
 import time
 import os
+from redis import redis.asyncio as redis
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=".env")
@@ -57,7 +58,7 @@ async def chat_id(code):
     
 async def update_chat(chat, line, user):
     pool = await asyncpg.create_pool(connection_string)
-    redis = aioredis.from_url(redis_url)
+    redis = redis.Redis(redis_url)
     timestamp = int(time.time())
     timestamp = str(int(time.time()))
     statement = f"""
@@ -66,7 +67,7 @@ async def update_chat(chat, line, user):
       ON CONFLICT (id)
       DO UPDATE SET id = '{chat}', time = '{timestamp}', line = '{line}', user_id = '{user}', active = 'Y';
     """
-    redis.hset(chat, {"time": timestamp, "line": line, "user": user})
+    redis.hset(chat, mapping={"time": timestamp, "line": line, "user": user})
     async with pool.acquire() as conn:
     # Execute a statement to create a new table.
         await conn.execute(statement)
@@ -95,7 +96,7 @@ async def finish_handler(request):
     
 async def delete_chat(chat):
   pool = await asyncpg.create_pool(connection_string)
-  redis = aioredis.from_url(redis_url)
+  redis = redis.Redis(redis_url)
   redis.delete(chat)
   statement = f"UPDATE chats SET active = 'N' WHERE id = '{chat}'"
   print(statement)
