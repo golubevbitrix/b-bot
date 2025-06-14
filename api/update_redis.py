@@ -27,7 +27,7 @@ async def redis_update_handler():
             row = dict(r.hgetall(key))
             print(row)
             print(timestamp - int(row["time"]))
-            if timestamp - int(row["time"]) > 240:
+            if timestamp - int(row["time"]) > 240 and timestamp - int(row["time"]) < 400:
                 print('queue: ', lines[row["line"]])
                 user = row["user"]
                 queue = lines[row["line"]]
