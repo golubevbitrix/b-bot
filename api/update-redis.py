@@ -15,7 +15,7 @@ connection_string = os.getenv("postgresql")
 load_dotenv(dotenv_path=".env.local")
 redis_url = os.getenv("REDIS_URL")
 
-async def update_handler():
+async def redis_update_handler():
     print(api, connection_string, redis_url)
     redis = aioredis.from_url(redis_url)
     timestamp = int(time.time())
