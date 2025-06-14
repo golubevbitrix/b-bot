@@ -17,17 +17,15 @@ redis_url = os.getenv("REDIS_URL")
 
 async def update_handler():
     print(api, connection_string, redis_url)
-    pool = await asyncpg.create_pool(connection_string)
+    redis = aioredis.from_url(redis_url)
     timestamp = int(time.time())
     lines = await get_lines()
     statement = "SELECT * FROM chats"
-    async with pool.acquire() as conn:
-    # Execute a statement to create a new table.
-        data = await conn.fetch(statement)
-        print('fetch result: ', data)
-        data = [dict(row) for row in data]
-        print('table: ', data)
-    await pool.close()
+    keys = redis.keys()
+    for key in keys:
+        row = aioredis.hgetall(key)
+        print(row)
+    '''
     for row in data:
             print(row)
             print(timestamp - int(row["time"]))
@@ -50,7 +48,7 @@ async def update_handler():
                 
                 await conn.execute(f"UPDATE chats SET time = '{str(timestamp)}', user_id = '{str(user)}' WHERE id = '{row["id"]}'")
       
-
+    '''
 async def change_user(chat, user):
     print("change user: started..")
     async with httpx.AsyncClient() as client:
