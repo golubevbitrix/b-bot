@@ -58,7 +58,7 @@ async def chat_id(code):
     
 async def update_chat(chat, line, user):
     pool = await asyncpg.create_pool(connection_string)
-    r = redis.Redis(redis_url)
+    r = redis.Redis.from_url(redis_url)
     timestamp = int(time.time())
     timestamp = str(int(time.time()))
     statement = f"""
@@ -100,7 +100,7 @@ async def finish_handler(request):
     
 async def delete_chat(chat):
   pool = await asyncpg.create_pool(connection_string)
-  r = redis.Redis(redis_url)
+  r = redis.Redis.from_url(redis_url)
   r.delete(chat)
   statement = f"UPDATE chats SET active = 'N' WHERE id = '{chat}'"
   print(statement)
