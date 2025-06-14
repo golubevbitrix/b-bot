@@ -2,7 +2,7 @@ aiogram
 fastapi
 asyncpg
 httpx
-aioredis
+aioredis==2.0.1
 dotenv
 setuptools
 distutils
