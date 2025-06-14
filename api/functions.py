@@ -81,11 +81,15 @@ async def add_handler(request):
   else:
     #code = chat_code(request)
     #data = await chat_id(code)
-    #chat = data["chat"]
+    #chat = data["chat"] an
+    print('add_handler: ')
     chat = re.search('\[chat_id\]=(.+?)&', request).group(1)
+    print('chat: ', chat)
     line = re.search('\[connector\]\[line_id\]=(.+?)&', request).group(1)
+    print('line: ', line)
     #user = data["user"]
     user = re.search('\[user_id\]=(.+?)&', request).group(1)
+    print('usee: ', user)
     if user != '0':
         await update_chat(chat, line, user)
     
