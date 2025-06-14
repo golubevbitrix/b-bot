@@ -18,7 +18,7 @@ redis_url = os.getenv("REDIS_URL")
 
 async def redis_update_handler():
     print(api, connection_string, redis_url)
-    r = redis.Redis(redis_url)
+    r = redis.Redis.from_url(redis_url)
     timestamp = int(time.time())
     lines = await get_lines()
     statement = "SELECT * FROM chats"
