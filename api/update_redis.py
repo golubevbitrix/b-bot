@@ -24,10 +24,7 @@ async def redis_update_handler():
     statement = "SELECT * FROM chats"
     keys = r.keys()
     for key in keys:
-        row = r.hgetall(key)
-        print(row)
-    '''
-    for row in data:
+            row = dict(r.hgetall(key))
             print(row)
             print(timestamp - int(row["time"]))
             if timestamp - int(row["time"]) > 240 and row["active"] == 'Y':
@@ -42,6 +39,7 @@ async def redis_update_handler():
                 user = queue[0]
                 print('line: ', lines[row["line"]])
                 print('user: ', user)
+                r.hset(key, mapping={"time": timestamp,"user": user, "line": row["line"])
                 try:
                     await change_user(row["id"], user)
                 except Exception as e:
@@ -49,7 +47,7 @@ async def redis_update_handler():
                 
                 await conn.execute(f"UPDATE chats SET time = '{str(timestamp)}', user_id = '{str(user)}' WHERE id = '{row["id"]}'")
       
-    '''
+    
 async def change_user(chat, user):
     print("change user: started..")
     async with httpx.AsyncClient() as client:
