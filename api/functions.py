@@ -2,11 +2,11 @@ from urllib.parse import unquote
 import httpx
 import re
 import asyncio
-import aioredis
+#import aioredis
 import asyncpg
 import time
 import os
-from redis import redis.asyncio as redis
+import redis
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=".env")
