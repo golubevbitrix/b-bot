@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 import asyncio
 import asyncpg
 import time
-import aioredis
+#import aioredis
+import redis
 
 load_dotenv(dotenv_path=".env")
 api = os.getenv("api")
@@ -17,13 +18,13 @@ redis_url = os.getenv("REDIS_URL")
 
 async def redis_update_handler():
     print(api, connection_string, redis_url)
-    redis = aioredis.from_url(redis_url)
+    redis = redis.Redis(redis_url)
     timestamp = int(time.time())
     lines = await get_lines()
     statement = "SELECT * FROM chats"
     keys = redis.keys()
     for key in keys:
-        row = aioredis.hgetall(key)
+        row = redis.hgetall(key)
         print(row)
     '''
     for row in data:
