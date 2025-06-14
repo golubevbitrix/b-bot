@@ -4,3 +4,4 @@ asyncpg
 httpx
 aioredis
 dotenv
+setuptools
