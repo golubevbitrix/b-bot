@@ -5,3 +5,4 @@ httpx
 aioredis==2.0.1
 dotenv
 setuptools
+wheel
