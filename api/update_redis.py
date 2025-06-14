@@ -18,13 +18,13 @@ redis_url = os.getenv("REDIS_URL")
 
 async def redis_update_handler():
     print(api, connection_string, redis_url)
-    redis = redis.Redis(redis_url)
+    r = redis.Redis(redis_url)
     timestamp = int(time.time())
     lines = await get_lines()
     statement = "SELECT * FROM chats"
-    keys = redis.keys()
+    keys = r.keys()
     for key in keys:
-        row = redis.hgetall(key)
+        row = r.hgetall(key)
         print(row)
     '''
     for row in data:
