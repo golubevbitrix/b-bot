@@ -3,16 +3,21 @@ from api.functions import delete_chat
 import httpx
 import re
 import os
+from dotenv import load_dotenv
 import asyncio
 import asyncpg
 import time
 #import aioredis
 
+api = os.getenv("api")
+connection_string = os.getenv("postgresql")
 #connection_string = 'postgresql://neondb_owner:npg_rzqOTvaJiP01@ep-frosty-morning-a2z2rgqi-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
-connection_string = 'postgresql://neondb_owner:npg_ZEKV2AOWjyp9@ep-raspy-rice-a26lcgy9-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
-#redis_url = 
+#connection_string = 'postgresql://neondb_owner:npg_ZEKV2AOWjyp9@ep-raspy-rice-a26lcgy9-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require'
+load_dotenv(dotenv_path=".env.local")
+redis_url = os.getenv("REDIS_URL")
+print(api, connection_string, redis_url)
 #redis = await aioredis.from_url(os.getenv("redis"))
-#api = os.getenv("api")
+api = os.getenv("api")
 async def update_handler():
     pool = await asyncpg.create_pool(connection_string)
     timestamp = int(time.time())
