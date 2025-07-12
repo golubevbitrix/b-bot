@@ -24,6 +24,7 @@ async def redis_update_handler():
     r = redis.Redis.from_url(redis_url, decode_responses=True)
     timestamp = int(time.time())
     lines = await get_lines(timestamp)
+    users = await get_users(lines)
     statement = "SELECT * FROM chats"
     keys = r.keys()
     list = []
@@ -109,7 +110,11 @@ async def get_lines(timestamp):
       printn('execution time: ', timestamp - int(time.time()))
       return lines
 
-async def get_statuses(user):
+async def get_statuses(rows):
+    cmd = {}
+    for row in rows:
+        cmd
+        
     async with httpx.AsyncClient() as client:
         data = {"USER_ID": user}
         response = await client.post(api + 'timeman.status', data=data)
@@ -157,5 +162,15 @@ async def get_saved_chat(chat):
     data = r.hget(chat)
     return data
 
+async def get_users(lines):
+    users = []
+    output = {}
+    for line in lines:
+        users.extend(line)
+    printn(users)
+    for user in users:
+        output[str(user)] = ""
+    return output
+    
 def printn(*args):
     print(f"#line {inspect.currentframe().f_back.f_lineno}: ", args)
