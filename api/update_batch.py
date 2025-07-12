@@ -41,19 +41,16 @@ async def redis_update_handler():
     mget_time = int(round(time.time()*10000))
     output = pipeline.execute()
     printn('pipeline execution time: ', int(round(time.time()*10000)) - mget_time)
+    
     for row, key in zip(output, list):
-            #print("row: ", key, row)
-            if "line" not in row:
-                    printn("skipped for no line in the row")
-                    continue
-            #print(lines)
-            #hgetall_time = int(round(time.time()*10000))        
-            queue = lines[row["line"]]
-            #print(queue)
-            #if timestamp - int(row["time"]) > delay and timestamp - int(row["time"]) < delay * 100 and len(queue) > 1:
+        if "line" not in row:
+            printn("skipped for no line in the row")
+            continue
+        row["queue"] = lines[row["line"]]
+        row["chat"] = key
+         
             if "origin" in row and len(queue) > 1:
                 statuses = {}
-                #print(statuses, "!")
                 printn(queue, row)
                 for user in queue:
                     status = await get_status(user)
@@ -112,7 +109,7 @@ async def get_lines(timestamp):
       printn('execution time: ', timestamp - int(time.time()))
       return lines
 
-async def get_status(user):
+async def get_statuses(user):
     async with httpx.AsyncClient() as client:
         data = {"USER_ID": user}
         response = await client.post(api + 'timeman.status', data=data)
