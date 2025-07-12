@@ -52,9 +52,9 @@ async def redis_update_handler():
         queue = dict.fromkeys(row["queue"], None)
         if "origin" in row and len(queue) > 1:
             for user in queue.keys():
-                
-            if False in statuses.values():
-                for user, status in statuses.items():
+                queue[user] = statuses[user]
+            if False in queue.values():
+                for user, status in queue.items():
                     printn(user, status, row["user"])
                     if status and user != row["user"]:
                         await update_chat(key, row["line"], user)
