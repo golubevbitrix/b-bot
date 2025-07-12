@@ -26,6 +26,7 @@ async def redis_update_handler():
     lines = await get_lines(timestamp)
     users = await get_users(lines)
     statuses = await get_statuses(users)
+    printn(users, statuses)
     keys = r.keys()
     list = []
     unsorted = None
@@ -44,12 +45,14 @@ async def redis_update_handler():
     printn('pipeline execution time: ', int(round(time.time()*10000)) - mget_time)
     
     for row, key in zip(output, list):
+        printn(key)
         if "line" not in row:
             printn("skipped for no line in the row")
             continue     
         row["queue"] = lines[row["line"]]
         row["chat"] = key
         queue = dict.fromkeys(row["queue"], None)
+        printn(key)
         if "origin" in row and len(queue) > 1:
             for user in queue.keys():
                 queue[user] = statuses[user]
