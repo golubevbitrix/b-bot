@@ -45,20 +45,20 @@ async def redis_update_handler():
     printn('pipeline execution time: ', int(round(time.time()*10000)) - mget_time)
     
     for row, key in zip(output, list):
-        printn(key)
+        #printn(key)
         if "line" not in row:
             printn("skipped for no line in the row")
             continue     
         row["queue"] = lines[row["line"]]
         row["chat"] = key
         queue = dict.fromkeys(row["queue"], None)
-        printn(key)
+        #printn(key)
         if "origin" in row and len(queue) > 1:
             for user in queue.keys():
                 queue[user] = statuses[user]
             if False in queue.values():
                 for user, status in queue.items():
-                    printn(user, status, row["user"])
+                    #printn(user, status, row["user"])
                     if status and user != row["user"]:
                         await update_chat(key, row["line"], user)
                         await change_user(key, user)
