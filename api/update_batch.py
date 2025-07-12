@@ -173,7 +173,11 @@ async def batch_request(path, param, data):
     cmd = {}
     for key in data.keys():
         cmd[key] = f"{path}?{param}={data[key]}"
+    data = {"cmd": cmd}
     async with httpx.AsyncClient() as client:
-        response = await client.post(f"{api}batch")
+        response = await client.post(f"{api}batch", json=data)
+        result = response.json()["result"]["result"]
+        return result
+        
 def printn(*args):
     print(f"#line {inspect.currentframe().f_back.f_lineno}: ", args)
