@@ -92,10 +92,10 @@ async def get_lines(timestamp):
     async with httpx.AsyncClient() as client:
       lines = {}
       response = await client.post(api + 'imopenlines.config.list.get')
-      json = response.json()
+      result = response.json()
       printn('execution time: ', timestamp - time.time())
       cmd = {}
-      for line in json["result"]:
+      for line in result["result"]:
           cmd[f"line-{line["ID"]}"] = f"imopenlines.config.get?CONFIG_ID={line["ID"]}"
       data = {"cmd": cmd}
       printn(data)
