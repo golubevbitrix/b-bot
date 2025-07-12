@@ -46,16 +46,13 @@ async def redis_update_handler():
     for row, key in zip(output, list):
         if "line" not in row:
             printn("skipped for no line in the row")
-            continue
+            continue     
         row["queue"] = lines[row["line"]]
         row["chat"] = key
+        queue = dict.fromkeys(row["queue"], None)
         if "origin" in row and len(queue) > 1:
-            statuses = {}
-            printn(queue, row)
-            for user in queue:
-                status = await get_status(user)
-                statuses[user] = status 
-            printn(statuses)
+            for user in queue.keys():
+                
             if False in statuses.values():
                 for user, status in statuses.items():
                     printn(user, status, row["user"])
