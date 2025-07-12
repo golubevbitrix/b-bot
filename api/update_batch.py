@@ -161,7 +161,8 @@ async def get_saved_chat(chat):
 async def get_users(lines):
     users = []
     output = {}
-    for line in lines:
+    for line in lines.values():
+        print(line)
         users.extend(line)
     printn(users)
     for user in users:
