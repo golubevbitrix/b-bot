@@ -25,7 +25,7 @@ async def redis_update_handler():
     timestamp = int(time.time())
     lines = await get_lines(timestamp)
     users = await get_users(lines)
-    statement = "SELECT * FROM chats"
+    statuses = await get_statuses(users)
     keys = r.keys()
     list = []
     unsorted = None
@@ -49,27 +49,26 @@ async def redis_update_handler():
             continue
         row["queue"] = lines[row["line"]]
         row["chat"] = key
-         
-            if "origin" in row and len(queue) > 1:
-                statuses = {}
-                printn(queue, row)
-                for user in queue:
-                    status = await get_status(user)
-                    statuses[user] = status 
-                printn(statuses)
-                if False in statuses.values():
-                    for user, status in statuses.items():
-                        printn(user, status, row["user"])
-                        if status and user != row["user"]:
-                            await update_chat(key, row["line"], user)
-                            await change_user(key, user)
+        if "origin" in row and len(queue) > 1:
+            statuses = {}
+            printn(queue, row)
+            for user in queue:
+                status = await get_status(user)
+                statuses[user] = status 
+            printn(statuses)
+            if False in statuses.values():
+                for user, status in statuses.items():
+                    printn(user, status, row["user"])
+                    if status and user != row["user"]:
+                        await update_chat(key, row["line"], user)
+                        await change_user(key, user)
                         
-                elif "origin" in row:
-                    if row["user"] != row["origin"]:
-                        await update_chat(key, row["line"], row["origin"])
-                        await change_user(key, row["origin"]) 
-                    else:
-                        printn("user is origin")
+            elif "origin" in row:
+                if row["user"] != row["origin"]:
+                    await update_chat(key, row["line"], row["origin"])
+                    await change_user(key, row["origin"]) 
+                else:
+                    printn("user is origin")
 
     printn("update finished")
   
@@ -110,20 +109,17 @@ async def get_lines(timestamp):
       printn('execution time: ', timestamp - int(time.time()))
       return lines
 
-async def get_statuses(rows):
+async def get_statuses(users):
     cmd = {}
-    for row in rows:
-        cmd
-        
+    for user in users.keys():
+        cmd[user] = f"timeman.status?USER_ID={user}"        
     async with httpx.AsyncClient() as client:
-        data = {"USER_ID": user}
-        response = await client.post(api + 'timeman.status', data=data)
-        json = response.json()
-        status = json["result"]["STATUS"]
-        if status == "OPENED":
-            return True
-        else:
-            return False 
+        data = {"cmd": cmd}
+        response = await client.post(api + 'batch', json=data)
+        json = response.json()["result"]["result"]
+        for user in users.keys():
+            users[user] = json[user]["STATUS"] == "OPENED"
+        return users
 
 async def handle_unsorted():
     r = redis.Redis.from_url(redis_url, decode_responses=True)
