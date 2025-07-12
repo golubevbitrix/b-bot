@@ -10,6 +10,7 @@ import time
 import inspect
 #import aioredis
 import redis
+import json
 
 load_dotenv(dotenv_path=".env")
 api = os.getenv("api")
@@ -100,7 +101,7 @@ async def get_lines(timestamp):
       printn(data)
       response = await client.post(api + 'batch', json=data)
       #print(response.json())
-      result = response.json()["result"]["result"]
+      result = json.loads(response.json()["result"]["result"])
       #printn(result)
       for line in result:
           print(type(line))
