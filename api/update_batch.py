@@ -168,6 +168,12 @@ async def get_users(lines):
     for user in users:
         output[str(user)] = ""
     return output
-    
+
+async def batch_request(path, param, data):
+    cmd = {}
+    for key in data.keys():
+        cmd[key] = f"{path}?{param}={data[key]}"
+    async with httpx.AsyncClient() as client:
+        response = await client.post(f"{api}batch")
 def printn(*args):
     print(f"#line {inspect.currentframe().f_back.f_lineno}: ", args)
