@@ -101,8 +101,9 @@ async def get_lines(timestamp):
       printn(data)
       response = await client.post(api + 'batch', json=data)
       #print(response.json())
-      result = response.json()["result"]["result"]
-      #printn(result)
+      result = response.json()
+      result = result["result"]["result"]["line-1"]["ID"]
+      printn(result)
       for line in result:
           print(type(line))
           line = json.loads(line)
