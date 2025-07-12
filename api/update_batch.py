@@ -42,17 +42,6 @@ async def redis_update_handler():
     printn('pipeline execution time: ', int(round(time.time()*10000)) - mget_time)
     for row, key in zip(output, list):
             #print("row: ", key, row)
-            #data = await get_data(key)
-            '''
-            if data:
-                connector = data["entity_id"].split("|")[0]
-                if "group" in connector:
-                    printn("group skipped")
-                    continue
-                
-            else:
-                continue
-            '''
             if "line" not in row:
                     printn("skipped for no line in the row")
                     continue
@@ -104,14 +93,16 @@ async def get_lines(timestamp):
       response = await client.post(api + 'imopenlines.config.list.get')
       json = response.json()
       printn('execution time: ', timestamp - time.time())
+      cmd = {}
       for line in json["result"]:
-          
-          data = {"CONFIG_ID": line["ID"]}
-          response = await client.post(api + 'imopenlines.config.get', data=data)
-          result = response.json()["result"]
-          lines[result["ID"]] = result["QUEUE"]
-          printn(lines)
-          printn('execution time: ', timestamp - int(time.time()))
+          cmd[f"line-{line["ID"]}"] = f"imopenlines.config.get?CONFIG_ID={line["ID"]}"
+      data = {"cmd": cmd}
+      response = await client.post(api + 'batch', data=data)
+      result = response.json()["result"]["result"]
+      for line in result:
+          lines[line["ID"]] = line["QUEUE"]
+      printn(lines)
+      printn('execution time: ', timestamp - int(time.time()))
       return lines
 
 async def get_status(user):
