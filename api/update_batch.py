@@ -86,21 +86,15 @@ async def change_user(chat, user):
           printn('transfer exception: ', e)
         
 async def get_lines(timestamp):
-    async with httpx.AsyncClient() as client:
-      lines = {}
+    lines = {}
+    async with httpx.AsyncClient() as client:      
       response = await client.post(api + 'imopenlines.config.list.get')
       result = response.json()
-      printn('execution time: ', timestamp - time.time())
-      cmd = {}
+      data = {}
       for line in result["result"]:
-          cmd[f"line-{line["ID"]}"] = f"imopenlines.config.get?CONFIG_ID={line["ID"]}"
-      data = {"cmd": cmd}
+          data[line["ID"]] = line["ID"]
       printn(data)
-      response = await client.post(api + 'batch', json=data)
-      #print(response.json())
-      result = response.json()
-      result = result["result"]["result"]
-      #printn(result)
+      result = await batch_request("imopenlines.config,get", "CONFIG_ID", data)
       for line in result.values():
           print(type(line))
           #line = json.loads(line)
@@ -110,16 +104,10 @@ async def get_lines(timestamp):
       return lines
 
 async def get_statuses(users):
-    cmd = {}
+    result = await batch_request("timeman.status", "USER_ID", users)
     for user in users.keys():
-        cmd[user] = f"timeman.status?USER_ID={user}"        
-    async with httpx.AsyncClient() as client:
-        data = {"cmd": cmd}
-        response = await client.post(api + 'batch', json=data)
-        json = response.json()["result"]["result"]
-        for user in users.keys():
-            users[user] = json[user]["STATUS"] == "OPENED"
-        return users
+        users[user] = result[user]["STATUS"] == "OPENED"
+    return users
 
 async def handle_unsorted():
     r = redis.Redis.from_url(redis_url, decode_responses=True)
@@ -172,7 +160,7 @@ async def get_users(lines):
 async def batch_request(path, param, data):
     cmd = {}
     for key in data.keys():
-        cmd[key] = f"{path}?{param}={data[key]}"
+        cmd[key] = f"{path}?{param}={key}"
     data = {"cmd": cmd}
     async with httpx.AsyncClient() as client:
         response = await client.post(f"{api}batch", json=data)
