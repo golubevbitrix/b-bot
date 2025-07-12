@@ -104,7 +104,7 @@ async def get_lines(timestamp):
       result = response.json()
       result = result["result"]["result"]
       #printn(result)
-      for line in result:
+      for line in result.values():
           print(type(line))
           #line = json.loads(line)
           lines[line["ID"]] = line["QUEUE"]
