@@ -98,7 +98,9 @@ async def get_lines(timestamp):
           cmd[f"line-{line["ID"]}"] = f"imopenlines.config.get?CONFIG_ID={line["ID"]}"
       data = {"cmd": cmd}
       response = await client.post(api + 'batch', data=data)
+      print(response.json())
       result = response.json()["result"]["result"]
+      printn(result)
       for line in result:
           lines[line["ID"]] = line["QUEUE"]
       printn(lines)
