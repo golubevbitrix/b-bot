@@ -103,7 +103,7 @@ async def get_lines(timestamp):
       result = response.json()["result"]["result"]
       #printn(result)
       for line in result:
-          print(typeof line)
+          print(type(line))
           lines[line["ID"]] = line["QUEUE"]
       printn(lines)
       printn('execution time: ', timestamp - int(time.time()))
