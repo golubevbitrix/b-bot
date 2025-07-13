@@ -33,7 +33,7 @@ async def redis_update_handler():
     pipeline = r.pipeline()
     for key in keys:
         if key == 'unsorted':
-            continue 
+            #continue 
             await handle_unsorted()
         elif key.find('-') == -1:
             list.append(key)
