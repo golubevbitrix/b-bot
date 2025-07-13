@@ -114,11 +114,11 @@ async def handle_unsorted():
     unsorted = r.hgetall('unsorted')
     printn(unsorted)
     data = await get_data(unsorted.values())
-    print(type(data))
+    print(type(data), data[data.keys()[0]])
     
     for key in data.keys():
         try:
-            
+            printn(key)
             chat = data[key]
             id = chat["ID"]
             #data = await get_data(chat)
