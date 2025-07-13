@@ -121,8 +121,6 @@ async def handle_unsorted():
             owner = data["owner"]
             printn(owner, line)
             if int(owner) != 0:
-               #hash = r.hget(chat)
-               #print(hash)
                r.hset(chat, mapping={"line": line, "user": owner, "origin": owner})
                r.hdel('unsorted', key)
                printn("origin set: ", chat, owner)
@@ -161,9 +159,10 @@ async def batch_request(path, param, data):
     cmd = {}
     for key in data.keys():
         cmd[key] = f"{path}?{param}={key}"
-    data = {"cmd": cmd}
+    json = {"cmd": cmd}
+    printn(json)
     async with httpx.AsyncClient() as client:
-        response = await client.post(f"{api}batch", json=data)
+        response = await client.post(f"{api}batch", json=json)
         result = response.json()["result"]["result"]
         print(result)
         return result
