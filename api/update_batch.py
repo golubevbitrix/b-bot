@@ -165,6 +165,7 @@ async def batch_request(path, param, data):
     async with httpx.AsyncClient() as client:
         response = await client.post(f"{api}batch", json=data)
         result = response.json()["result"]["result"]
+        print(result)
         return result
         
 def printn(*args):
