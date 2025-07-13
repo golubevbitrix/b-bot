@@ -116,8 +116,9 @@ async def handle_unsorted():
     data = await get_data(unsorted.values())
     print(type(data))
     
-    for key in unsorted.values():
+    for key in data.keys():
         try:
+            
             chat = data[key]
             id = chat["ID"]
             #data = await get_data(chat)
