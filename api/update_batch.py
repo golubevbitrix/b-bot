@@ -120,7 +120,8 @@ async def handle_unsorted():
         try:
             printn(key)
             chat = data[key]
-            id = chat["ID"]
+            print(chat)
+            id = chat["id"]
             #data = await get_data(chat)
             line = chat["entity_id"].split('|')[1]
             owner = chat["owner"]
