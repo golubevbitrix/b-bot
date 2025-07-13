@@ -113,21 +113,26 @@ async def handle_unsorted():
     r = redis.Redis.from_url(redis_url, decode_responses=True)
     unsorted = r.hgetall('unsorted')
     printn(unsorted)
+    data = await get_data(unsorted)
     for key in unsorted.keys():
         try:
-            chat = unsorted[key]
-            data = await get_data(chat)
-            line = data["entity_id"].split('|')[1]
-            owner = data["owner"]
+            chat = data[key]
+            id = chat["ID"]
+            #data = await get_data(chat)
+            line = chat["entity_id"].split('|')[1]
+            owner = chat["owner"]
             printn(owner, line)
             if int(owner) != 0:
-               r.hset(chat, mapping={"line": line, "user": owner, "origin": owner})
+               r.hset(id, mapping={"line": line, "user": owner, "origin": owner})
                r.hdel('unsorted', key)
-               printn("origin set: ", chat, owner)
+               printn("origin set: ", id, owner)
         except Exception as e:
             printn(f"{unsorted[key]} has not been deleted for {e}")
             
-async def get_data(chat):
+async def get_data(chats):
+    result = await batch_request(chats)
+    return result
+    '''
     async with httpx.AsyncClient() as client:
         data = {"CHAT_ID": chat}
         printn(data)
@@ -138,7 +143,7 @@ async def get_data(chat):
             return(response["result"])
         except Exception as e:
             printn("dialog get exception: ", e)
-            
+    '''      
 async def get_saved_chat(chat):
     r = redis.Redis.from_url(redis_url, decode_responses=True)
     data = r.hget(chat)
