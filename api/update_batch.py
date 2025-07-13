@@ -94,7 +94,7 @@ async def get_lines(timestamp):
       for line in result["result"]:
           data[line["ID"]] = line["ID"]
       printn(data)
-      result = await batch_request("imopenlines.config.get", "CONFIG_ID", data)
+      result = await batch_request("imopenlines.config.get", "CONFIG_ID", data.keys())
       for line in result.values():
           print(type(line))
           #line = json.loads(line)
@@ -104,7 +104,7 @@ async def get_lines(timestamp):
       return lines
 
 async def get_statuses(users):
-    result = await batch_request("timeman.status", "USER_ID", users)
+    result = await batch_request("timeman.status", "USER_ID", users.keys())
     for user in users.keys():
         users[user] = result[user]["STATUS"] == "OPENED"
     return users
@@ -162,9 +162,9 @@ async def get_users(lines):
         output[str(user)] = ""
     return output
 
-async def batch_request(path, param, data):
+async def batch_request(path, param, array):
     cmd = {}
-    for key in data.keys():
+    for key in array:
         cmd[key] = f"{path}?{param}={key}"
     json = {"cmd": cmd}
     #printn(json)
