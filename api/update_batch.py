@@ -1,4 +1,4 @@
-from urllib.parse import unquote
+pfrom urllib.parse import unquote
 from api.functions import delete_chat, update_chat, chat_id
 import httpx
 import re
@@ -34,7 +34,7 @@ async def redis_update_handler():
     for key in keys:
         if key == 'unsorted':
             continue 
-            #await handle_unsorted()
+            await handle_unsorted()
         elif key.find('-') == -1:
             list.append(key)
             pipeline.hgetall(key)
