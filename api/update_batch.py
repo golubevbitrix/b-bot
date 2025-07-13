@@ -120,7 +120,7 @@ async def handle_unsorted():
         try:
             printn(key)
             chat = data[key]
-            print(chat)
+            #print(chat)
             id = chat["id"]
             #data = await get_data(chat)
             line = chat["entity_id"].split('|')[1]
@@ -130,6 +130,7 @@ async def handle_unsorted():
                r.hset(id, mapping={"line": line, "user": owner, "origin": owner})
                r.hdel('unsorted', key)
                printn("origin set: ", id, owner)
+            printn(key, "completed")
         except Exception as e:
             printn(f"{unsorted[key]} has not been deleted for {e}")
             
