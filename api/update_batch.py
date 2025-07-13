@@ -114,6 +114,7 @@ async def handle_unsorted():
     unsorted = r.hgetall('unsorted')
     printn(unsorted)
     data = await get_data(unsorted)
+    print(type(data))
     for key in unsorted.keys():
         try:
             chat = data[key]
@@ -165,7 +166,7 @@ async def batch_request(path, param, data):
     for key in data.keys():
         cmd[key] = f"{path}?{param}={key}"
     json = {"cmd": cmd}
-    printn(json)
+    #printn(json)
     async with httpx.AsyncClient() as client:
         response = await client.post(f"{api}batch", json=json)
         result = response.json()["result"]["result"]
