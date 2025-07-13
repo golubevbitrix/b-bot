@@ -130,7 +130,7 @@ async def handle_unsorted():
             printn(f"{unsorted[key]} has not been deleted for {e}")
             
 async def get_data(chats):
-    result = await batch_request(chats)
+    result = await batch_request('imopenlines.dialog.get', 'CHAT_ID', chats)
     return result
     '''
     async with httpx.AsyncClient() as client:
