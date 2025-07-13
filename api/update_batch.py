@@ -94,7 +94,7 @@ async def get_lines(timestamp):
       for line in result["result"]:
           data[line["ID"]] = line["ID"]
       printn(data)
-      result = await batch_request("imopenlines.config,get", "CONFIG_ID", data)
+      result = await batch_request("imopenlines.config.get", "CONFIG_ID", data)
       for line in result.values():
           print(type(line))
           #line = json.loads(line)
