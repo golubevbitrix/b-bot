@@ -113,7 +113,7 @@ async def handle_unsorted():
     r = redis.Redis.from_url(redis_url, decode_responses=True)
     unsorted = r.hgetall('unsorted')
     printn(unsorted)
-    data = await get_data(unsorted)
+    data = await get_data(unsorted.values())
     print(type(data), data[0])
     
     for key in unsorted.keys():
