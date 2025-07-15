@@ -34,7 +34,7 @@ async def redis_update_handler():
     for key in keys:
         if key == 'unsorted':
             #continue 
-            await handle_unsorted()
+            #await handle_unsorted()
         elif key.find('-') == -1:
             list.append(key)
             pipeline.hgetall(key)
@@ -45,7 +45,7 @@ async def redis_update_handler():
     printn('pipeline execution time: ', int(round(time.time()*10000)) - mget_time)
     
     for row, key in zip(output, list):
-        #printn(key)
+        printn(key,row)
         if "line" not in row:
             printn("skipped for no line in the row")
             continue     
