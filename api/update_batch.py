@@ -42,8 +42,9 @@ async def redis_update_handler():
     printn(string)
     mget_time = int(round(time.time()*10000))
     output = pipeline.execute()
-    printn('pipeline execution time: ', int(round(time.time()*10000)) - mget_time)
-    
+    #printn('pipeline execution time: ', int(round(time.time()*10000)) - mget_time)
+    users_to_change = {}
+    chats_to_change = {}
     for row, key in zip(output, list):
         printn(key,row)
         if "line" not in row:
@@ -60,28 +61,30 @@ async def redis_update_handler():
                 for user, status in queue.items():
                     #printn(user, status, row["user"])
                     if status and user != row["user"]:
-                        await update_chat(key, row["line"], user)
-                        await change_user(key, user)
+                        #await update_chat(key, row["line"], user)
+                        #await change_user(key, user)
+                        chats_to_change[key] = {"user":user, "line": row["line"]}
                         
             elif "origin" in row:
                 if row["user"] != row["origin"]:
-                    await update_chat(key, row["line"], row["origin"])
-                    await change_user(key, row["origin"]) 
+                    #await update_chat(key, row["line"], row["origin"])
+                    #await change_user(key, row["origin"]) 
+                    chats_to_change[key] = {"user":user, "line": row["line"]}
                 else:
                     printn("user is origin")
 
     printn("update finished")
   
 async def change_user(chat, user):
-    printn("change user: started..")
+   # printn("change user: started..")
     async with httpx.AsyncClient() as client:
-      printn("change user: connection..")
+      #printn("change user: connection..")
       data = {"CHAT_ID": chat, "TRANSFER_ID": user}
       try:
           printn("change user: posting..")
           response = await client.post(api + 'imopenlines.operator.transfer', data=data)
           response = response.json()
-          printn('transfer response: ', response)
+          printn('transfer response: ', response["result"])
       except Exception as e:
           printn('transfer exception: ', e)
         
@@ -174,7 +177,7 @@ async def batch_request(path, param, array):
     async with httpx.AsyncClient() as client:
         response = await client.post(f"{api}batch", json=json)
         result = response.json()["result"]["result"]
-        printn(len(result), type(result))
+        #printn(len(result), type(result))
         return result
         
 def printn(*args):
