@@ -193,10 +193,12 @@ async def batch_request(path, param, keys):
         result = response.json()
         #printn(len(result), type(result))
         output = result["result"]["result"]
+        print(output.keys(), output["6"])
         if len(remaining) > 0:
             result = await batch_request(path, param, remaining)
-        output = output| result
+        output = output|result
         printn(len(list(output.keys())))
+    print(output.keys(), output["6"])
     return output
 
 async def update_chat_users():
