@@ -176,7 +176,7 @@ async def get_chats(chats):
     response = response.json()
     return response["result"]["result"]
 
-async def batch_request(path, param, keys):
+async def batch_request(path, param, keys, output):
     output = {}
     keys = list(keys)
     remaining = []
@@ -195,8 +195,8 @@ async def batch_request(path, param, keys):
         output = result["result"]["result"]
         print(output.keys(), output["6"])
         if len(remaining) > 0:
-            result = await batch_request(path, param, remaining)
-        output = output|result
+            remaining = await batch_request(path, param, remaining)
+            output = output|remaining 
         printn(len(list(output.keys())))
     print(output.keys(), output["6"])
     return output
