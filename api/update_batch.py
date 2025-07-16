@@ -176,15 +176,15 @@ async def get_chats(chats):
     response = response.json()
     return response["result"]["result"]
 
-async def batch_request(path, param, list):
+async def batch_request(path, param, keys):
     output = {}
-    list = list(list)
+    keys = list(keys)
     remaining = []
-    if len(list) > 50:
+    if len(keys) > 50:
         remaining = list[50:]
-        list = list[:49]
+        keys = keys[:49]
     cmd = {}
-    for key in list:
+    for key in keys:
         cmd[key] = f"{path}?{param}={key}"
     json = {"cmd": cmd}
     #printn(json)
