@@ -215,8 +215,10 @@ async def update_chat_users():
     output, keys = await get_redis_data()
     result = await batch_request("imopenlines.dialog.get","CHAT_ID", keys)
     printn(type(keys))
-    for chat, row, n in result, output, keys:
-        printn(n, chat["owner"], row["user"])
+    for row, key in output, keys:
+        row["id"] = key
+    for chat, row in result, output:
+        printn(row["id"], chat["owner"], row["user"])
 
 async def get_redis_data():
     r = redis.Redis.from_url(redis_url, decode_responses=True)
