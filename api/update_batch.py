@@ -176,7 +176,7 @@ async def get_chats(chats):
     response = response.json()
     return response["result"]["result"]
 
-async def batch_request(path, *param, array):
+async def batch_request(path, param, array):
     array = list(array)
     cmd = {}
     for key in array:
