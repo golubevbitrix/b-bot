@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 #from tgbot.main import tgbot
 from api.functions import hook_handler
 from api.check import update_handler
-from api.update_batch import redis_update_handler, get_saved_chat, handle_unsorted
+from api.update_batch import redis_update_handler, get_saved_chat, handle_unsorted, update_chat_users
 from urllib.parse import unquote, urlparse
 
 app = FastAPI()
@@ -56,6 +56,13 @@ async def update(request: Request, chat: str):
     return data
 
 @app.get('/api/handle-unsorted')
+async def update(request: Request):
+    try:
+        await handle_unsorted()
+    except Exception as e:
+        print(e)
+
+@app.get('/api/update-users')
 async def update(request: Request):
     try:
         await handle_unsorted()
