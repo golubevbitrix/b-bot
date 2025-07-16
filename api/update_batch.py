@@ -21,12 +21,13 @@ redis_url = os.getenv("REDIS_URL")
 
 async def redis_update_handler():
     printn(api, connection_string, redis_url)
-    r = redis.Redis.from_url(redis_url, decode_responses=True)
+    #r = redis.Redis.from_url(redis_url, decode_responses=True)
     timestamp = int(time.time())
     lines = await get_lines(timestamp)
     users = await get_users(lines)
     statuses = await get_statuses(users)
     printn(users, statuses)
+    '''
     keys = r.keys()
     list = []
     unsorted = None
@@ -42,6 +43,8 @@ async def redis_update_handler():
     printn(string)
     mget_time = int(round(time.time()*10000))
     output = pipeline.execute()
+    '''
+    output, list = await get_redis_data()
     #printn('pipeline execution time: ', int(round(time.time()*10000)) - mget_time)
     users_to_change = {}
     chats_to_change = {}
@@ -115,13 +118,13 @@ async def get_statuses(users):
 async def handle_unsorted():
     r = redis.Redis.from_url(redis_url, decode_responses=True)
     unsorted = r.hgetall('unsorted')
-    printn(unsorted)
+    printn(unsorted.keys().sort())
     data = await get_data(unsorted.values())
-    print(type(data), data[list(data.keys())[0]])
+    #print(type(data), data[list(data.keys())[0]])
     
     for key in data.keys():
         try:
-            printn(key)
+            #printn(key)
             chat = data[key]
             #print(chat)
             id = chat["id"]
@@ -168,7 +171,12 @@ async def get_users(lines):
         output[str(user)] = ""
     return output
 
-async def batch_request(path, param, array):
+async def get_chats(chats){
+    response = await batch_request("dialog.get","CHAT_ID", chats)
+    response = response.json()
+    return response["result"]["result"]
+
+async def batch_request(path, *param, array):
     cmd = {}
     for key in array:
         cmd[key] = f"{path}?{param}={key}"
@@ -179,6 +187,31 @@ async def batch_request(path, param, array):
         result = response.json()["result"]["result"]
         #printn(len(result), type(result))
         return result
-        
+
+async def update_chat_users():
+    output, list = await get_redis_data()
+    result = await batch_request("imopenlines.dialog.get","CHAT_ID", list)
+    for chat, row, n in result, output, list:
+        printn(n, chat["owner"], row["user"])
+
+async def get_redis_data():
+    r = redis.Redis.from_url(redis_url, decode_responses=True)
+    keys = r.keys()
+    list = []
+    unsorted = None
+    pipeline = r.pipeline()
+    for key in keys:
+        if key == 'unsorted':
+            continue 
+            #await handle_unsorted()
+        elif key.find('-') == -1:
+            list.append(key)
+            pipeline.hgetall(key)
+    string = "MGET " + ', '.join(list)
+    printn(string)
+    mget_time = int(round(time.time()*10000))
+    output = pipeline.execute()
+    return output, list
+    
 def printn(*args):
     print(f"#line {inspect.currentframe().f_back.f_lineno}: ", args)
