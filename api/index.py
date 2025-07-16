@@ -65,6 +65,6 @@ async def update(request: Request):
 @app.get('/api/update-users')
 async def update(request: Request):
     try:
-        await handle_unsorted()
+        await update_chat_users()
     except Exception as e:
         print(e)
