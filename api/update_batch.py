@@ -176,22 +176,32 @@ async def get_chats(chats):
     response = response.json()
     return response["result"]["result"]
 
-async def batch_request(path, param, array):
-    array = list(array)
+async def batch_request(path, param, list):
+    output = {}
+    list = list(list)
+    remaining = []
+    if len(list) > 50:
+        remaining = list[50:]
+        list = list[:49]
     cmd = {}
-    for key in array:
+    for key in list:
         cmd[key] = f"{path}?{param}={key}"
     json = {"cmd": cmd}
     #printn(json)
     async with httpx.AsyncClient() as client:
         response = await client.post(f"{api}batch", json=json)
-        result = response.json()["result"]["result"]
+        result = response.json()
         #printn(len(result), type(result))
-        return result
+        output = result["result"]["result"]
+        if len(remaining) > 0:
+            result = await batch_request(path, param, remaining)
+        output = output| result
+    return output
 
 async def update_chat_users():
     output, list = await get_redis_data()
     result = await batch_request("imopenlines.dialog.get","CHAT_ID", list)
+    print(list)
     for chat, row, n in result, output, list:
         printn(n, chat["owner"], row["user"])
 
@@ -212,6 +222,7 @@ async def get_redis_data():
     printn(string)
     mget_time = int(round(time.time()*10000))
     output = pipeline.execute()
+    printn(type(output), len(list))
     return output, list
     
 def printn(*args):
