@@ -202,10 +202,10 @@ async def batch_request(path, param, keys):
     return output
 
 async def update_chat_users():
-    output, list = await get_redis_data()
-    result = await batch_request("imopenlines.dialog.get","CHAT_ID", list)
-    print(list)
-    for chat, row, n in result, output, list:
+    output, keys = await get_redis_data()
+    result = await batch_request("imopenlines.dialog.get","CHAT_ID", keys)
+    print(keys)
+    for chat, row, n in result, output, keys:
         printn(n, chat["owner"], row["user"])
 
 async def get_redis_data():
