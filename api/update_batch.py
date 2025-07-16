@@ -198,7 +198,7 @@ async def batch_request(path, param, keys):
             remaining = await batch_request(path, param, remaining)
             output = output|remaining 
         printn(len(list(output.keys())))
-    print(output.keys(), output[output.keys()[0]])
+    print(output.keys(), output[list(output.keys())[0]])
     return output
 
 async def update_chat_users():
