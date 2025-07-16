@@ -158,7 +158,7 @@ async def get_data(chats):
 async def get_saved_chat(chat):
     r = redis.Redis.from_url(redis_url, decode_responses=True)
     printn(chat)
-    data = r.hget(str(chat))
+    data = r.hgetall(str(chat))
     printn(data)
     return data
 
