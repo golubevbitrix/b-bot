@@ -225,7 +225,7 @@ async def get_redis_data():
     printn(string)
     mget_time = int(round(time.time()*10000))
     output = pipeline.execute()
-    printn(type(output), len(list))
+    printn(type(output))
     return output, list
     
 def printn(*args):
