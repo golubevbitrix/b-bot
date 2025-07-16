@@ -195,6 +195,7 @@ async def batch_request(path, param, keys):
         #printn(len(result), type(result))
         output = result["result"]["result"]
         print(output.keys(), output[list(output.keys())[0]])
+        print(type(remaining))
         if len(remaining) > 0:
             remaining = await batch_request(path, param, remaining)
             output = output|remaining 
