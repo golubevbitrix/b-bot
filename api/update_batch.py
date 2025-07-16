@@ -171,7 +171,7 @@ async def get_users(lines):
         output[str(user)] = ""
     return output
 
-async def get_chats(chats){
+async def get_chats(chats):
     response = await batch_request("dialog.get","CHAT_ID", chats)
     response = response.json()
     return response["result"]["result"]
