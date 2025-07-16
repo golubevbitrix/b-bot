@@ -218,11 +218,16 @@ async def update_chat_users():
     result = await batch_request("imopenlines.dialog.get","CHAT_ID", keys)
     printn(type(keys))
     for row, key in zip(output, keys):
-        #row["id"] = key
+        #row["id"] = ke
+        
+        owner = result[key]["owner"]
+        user = row["user"]
+        
         try:
-            printn(key, result[key]["owner"], row["user"])
+            printn(key, owner, user)
         except Exception as e:
             printn(row, e)
+    printn("update finished")
     #for row in output:
         #printn(row["id"], chat["owner"], row["user"])
 
