@@ -219,8 +219,9 @@ async def update_chat_users():
     printn(type(keys))
     for row, key in zip(output, keys):
         row["id"] = key
-    for chat, row in zip(result, output):
-        printn(row["id"], chat["owner"], row["user"])
+        printn(key, result[key]["owner"], row["user"])
+    #for row in output:
+        #printn(row["id"], chat["owner"], row["user"])
 
 async def get_redis_data():
     r = redis.Redis.from_url(redis_url, decode_responses=True)
