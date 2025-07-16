@@ -181,6 +181,7 @@ async def batch_request(path, param, keys):
     if not isinstance(keys, list):
         keys = list(keys)
     remaining = []
+    printn(len(keys))
     if len(keys) > 50:
         remaining = keys[50:]
         keys = keys[:49]
@@ -194,19 +195,26 @@ async def batch_request(path, param, keys):
         result = response.json()
         #printn(len(result), type(result))
         output = result["result"]["result"]
-        print(output.keys(), output[list(output.keys())[0]])
-        print(type(remaining))
+        printn(output.keys())
+        first = output[list(output.keys())[0]]
+        if first["id"]:
+            printn(first["id"])
+        else:
+            printn("no id")
+        #print(type(remaining))
         if len(remaining) > 0:
             remaining = await batch_request(path, param, remaining)
             output = output|remaining 
         #printn(len(list(output.keys())))
-    print(output.keys(), output[list(output.keys())[0]])
+    printn(len(output.keys()), output.keys())
+    first = output[list(output.keys())[0]]
+    
     return output
 
 async def update_chat_users():
     output, keys = await get_redis_data()
     result = await batch_request("imopenlines.dialog.get","CHAT_ID", keys)
-    print(type(keys))
+    printn(type(keys))
     for chat, row, n in result, output, keys:
         printn(n, chat["owner"], row["user"])
 
