@@ -284,7 +284,7 @@ async def get_origin(client, chat, session):
     messages = dict(sorted(messages.items()))
        
     for key in messages.keys():
-        printn(key)
+        #printn(key)
         text = messages[key]["text"]
         user = ""
         match = re.search("\[USER=(\d+) REPLACE\].*\[/USER\] начал работу с диалогом", text)
