@@ -256,7 +256,7 @@ async def get_chat_history(chat, session):
     async with httpx.AsyncClient() as client:
         async with client.stream('GET', url) as response:
             count = 0
-            async for chunk in response.aiter_text(10):
+            async for chunk in response.aiter_text(2000):
                 print(count, chunk)
                 count += 1
 
