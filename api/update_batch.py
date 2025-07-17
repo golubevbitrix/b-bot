@@ -291,7 +291,7 @@ async def set_origins():
         for row, key in zip(output, list):
             if row["origin"] is None or row["origin"] == "0":
                 origin = await get_origin(client, key)
-                if origin not is None:
+                if origin is not None:
                     row["origin"] = origin 
                     r.hset(key, mapping=row)
                     
