@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 #from tgbot.main import tgbot
 from api.functions import hook_handler
 from api.check import update_handler
-from api.update_batch import redis_update_handler, get_saved_chat, handle_unsorted, update_chat_users, get_chat_history, set_origin
+from api.update_batch import redis_update_handler, get_saved_chat, handle_unsorted, update_chat_users, set_origin
 from urllib.parse import unquote, urlparse
 
 app = FastAPI()
