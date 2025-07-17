@@ -284,7 +284,7 @@ async def get_origin(client, chat, session):
         user = ""
         match = re.search("\[USER=(\d+) REPLACE\].*\[/USER\] начал работу с диалогом", text)
         if match:
-            user = match.group(0)
+            user = match.group(1)
             print(chat, "user: ", user)
             return user
                 
@@ -309,6 +309,8 @@ async def set_origins():
                     origin = "0"
             #printn(row["origin"] is None)
             if str(origin) == "0":
+                if "session" not in row:
+                    continue
                 origin = await get_origin(client, key, row["session"])
                 if origin is not None:
                     row["origin"] = origin 
