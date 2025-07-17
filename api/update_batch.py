@@ -270,9 +270,10 @@ async def get_redis_data():
 async def get_origin(client, chat, session):
     url = f"{api}imopenlines.session.history.get?CHAT_ID={chat}&SESSION_ID={session}"
     try:
-        response = await client.get(url, timeout=10.0)
+        response = await client.get(url, timeout=60.0)
         response.raise_for_status()
     except httpx.HTTPError as exc:
+        printn(exc)
         return None
     json = response.json()
     messages = json["result"]["message"]
@@ -310,6 +311,7 @@ async def set_origins():
             #printn(row["origin"] is None)
             if str(origin) == "0":
                 if "session" not in row:
+                    printn(key, "skipped for no session")
                     continue
                 origin = await get_origin(client, key, row["session"])
                 if origin is not None:
