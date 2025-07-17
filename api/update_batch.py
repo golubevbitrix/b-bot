@@ -225,8 +225,11 @@ async def update_chat_users():
         user = row["user"]
         if user is None:
             row["user"] = owner
-            line = result[key]["owner"].split('|')[1]
+            line = result[key]["entity_id"].split('|')[1]
+            session = result[key]["entity_data_1"].split('|')[5]
             row["line"] = line
+        row["session"] = session 
+        r.hset(key, mapping=row)    
         
         try:
             printn(key, owner, user)
@@ -256,8 +259,8 @@ async def get_redis_data():
     printn(type(output))
     return output, list
 
-async def get_origin(client, chat):
-    url = f"{api}imopenlines.session.history.get?CHAT_ID={chat}"
+async def get_origin(client, chat, session):
+    url = f"{api}imopenlines.session.history.get?CHAT_ID={chat}&SESSION_ID={session}"
     try:
         response = await client.get(url, timeout=10.0)
         response.raise_for_status()
