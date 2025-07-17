@@ -186,7 +186,7 @@ async def batch_request(path, param, keys):
     #printn(len(keys))
     if len(keys) > 50:
         remaining = keys[50:]
-        keys = keys[:49]
+        keys = keys[:50]
     cmd = {}
     for key in keys:
         cmd[key] = f"{path}?{param}={key}"
