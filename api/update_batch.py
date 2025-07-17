@@ -140,7 +140,8 @@ async def handle_unsorted():
             printn(key, "completed")
         except Exception as e:
             printn(f"{unsorted[key]} has not been deleted for {e}")
-            
+    printn("sorting finished ")
+    
 async def get_data(chats):
     result = await batch_request('imopenlines.dialog.get', 'CHAT_ID', chats)
     return result
