@@ -223,7 +223,7 @@ async def update_chat_users():
         
         owner = result[key]["owner"]
         
-        if user not in row:
+        if "user" not in row:
             row["user"] = owner
             line = result[key]["entity_id"].split('|')[1]
             
@@ -233,7 +233,7 @@ async def update_chat_users():
         r.hset(key, mapping=row)    
         
         try:
-            printn(key, owner, user)
+            printn(key, owne)
         except Exception as e:
             printn(row, e)
     printn("update finished")
