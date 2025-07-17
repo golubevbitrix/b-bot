@@ -252,10 +252,13 @@ async def get_redis_data():
     return output, list
 
 async def get_chat_history(chat, session):
+    url = f"{api}imopenlines.session.history.get?CHAT_ID={chat}&SESSION_ID={session}"
     async with httpx.AsyncClient() as client:
-        async with client.stream('GET', 'https://www.example.com/') as response:
+        async with client.stream('GET', url) as response:
+            count = 0
             async for chunk in response.aiter_text(10):
-                print(chunk)
+                print(count, chunk)
+                count += 1
 
 def printn(*args):
     print(f"#line {inspect.currentframe().f_back.f_lineno}: ", args)
