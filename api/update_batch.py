@@ -264,7 +264,7 @@ async def get_redis_data():
     printn(string)
     mget_time = int(round(time.time()*10000))
     output = pipeline.execute()
-    printn(type(output))
+    printn(type(output), len(output), len(list))
     return output, list
 
 async def get_origin(client, chat, session):
