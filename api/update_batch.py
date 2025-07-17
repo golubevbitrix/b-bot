@@ -276,13 +276,13 @@ async def get_origin(client, chat, session):
         return None
     json = response.json()
     messages = json["result"]["message"]
-    printn(messages)
+    #printn(messages)
     messages = dict(sorted(messages.items()))
         
     for key in messages.keys():
         text = messages[key]["text"]
         user = ""
-        match = re.match("\[USER=(\d+) REPLACE\].*\[/USER\] начал работу с диалогом", text)
+        match = re.search("\[USER=(\d+) REPLACE\].*\[/USER\] начал работу с диалогом", text)
         if match:
             user = match.group(0)
             print(chat, "user: ", user)
@@ -303,7 +303,10 @@ async def set_origins():
         for row, key in zip(output, list):
             origin = "0"
             if "origin" in row:
-                origin = row["origin"]           
+                origin = row["origin"]
+                if origin[0] == "[":
+                    printn(key, origin)
+                    origin = "0"
             #printn(row["origin"] is None)
             if str(origin) == "0":
                 origin = await get_origin(client, key, row["session"])
