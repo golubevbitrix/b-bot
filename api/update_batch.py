@@ -282,7 +282,7 @@ async def get_origin(client, chat, session):
     for key in messages.keys():
         text = messages[key]["text"]
         user = ""
-        match = re.match("\[USER=(\d+).*\[\\USER\] начал работу с диалогом", text)
+        match = re.match("\[USER=(\d+) REPLACE\].*\[/USER\] начал работу с диалогом", text)
         if match:
             user = match.group(0)
             print(chat, "user: ", user)
