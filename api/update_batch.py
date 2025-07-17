@@ -315,6 +315,7 @@ async def set_origins():
                 if origin is not None:
                     row["origin"] = origin 
                     r.hset(key, mapping=row)
+    printn("setting finished")
                     
 def printn(*args):
     print(f"#line {inspect.currentframe().f_back.f_lineno}: ", args)
