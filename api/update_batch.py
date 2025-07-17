@@ -118,6 +118,7 @@ async def get_statuses(users):
 async def handle_unsorted():
     r = redis.Redis.from_url(redis_url, decode_responses=True)
     unsorted = r.hgetall('unsorted')
+    printn(unsorted)
     printn(list(unsorted.keys()).sort())
     data = await get_data(unsorted.values())
     #print(type(data), data[list(data.keys())[0]])
