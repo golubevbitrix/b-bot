@@ -220,7 +220,8 @@ async def update_chat_users():
     r = redis.Redis.from_url(redis_url, decode_responses=True)
     for row, key in zip(output, keys):
         #row["id"] = ke
-        
+        if key not in result:
+            continue
         owner = result[key]["owner"]
         
         if "user" not in row:
@@ -233,7 +234,7 @@ async def update_chat_users():
         r.hset(key, mapping=row)    
         
         try:
-            printn(key, owne)
+            printn(key, owner)
         except Exception as e:
             printn(row, e)
     printn("update finished")
