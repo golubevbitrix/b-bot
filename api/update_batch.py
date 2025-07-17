@@ -137,7 +137,7 @@ async def handle_unsorted():
                r.hset(id, mapping={"line": line, "user": owner, "session": session})
                r.hdel('unsorted', key)
                printn("origin set: ", id, owner)
-            printn(key, owner, line, "completed")
+            #printn(key, owner, line, "completed")
         except Exception as e:
             printn(f"{unsorted[key]} has not been deleted for {e}")
     printn("sorting finished")
