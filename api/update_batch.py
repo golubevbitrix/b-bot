@@ -289,9 +289,13 @@ async def set_origins():
     r = redis.Redis.from_url(redis_url, decode_responses=True)
     async with httpx.AsyncClient() as client:
         for row, key in zip(output, list):
+            if "origin" in row:
+                origin = row["origin"]
+            else: 
+                origin = "0"
             
-            printn(row["origin"] is None)
-            if row["origin"] is None or row["origin"] == "0":
+            #printn(row["origin"] is None)
+            if str(origin) == "0":
                 origin = await get_origin(client, key)
                 if origin is not None:
                     row["origin"] = origin 
