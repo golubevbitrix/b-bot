@@ -257,7 +257,7 @@ async def get_redis_data():
     return output, list
 
 async def get_origin(client, chat):
-    url = f"{api}imopenlines.session.history.get?CHAT_ID={chat}&SESSION_ID={session}"
+    url = f"{api}imopenlines.session.history.get?CHAT_ID={chat}"
     try:
         response = await client.get(url, timeout=10.0)
         response.raise_for_status()
