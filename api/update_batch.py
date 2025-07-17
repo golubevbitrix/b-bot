@@ -199,7 +199,7 @@ async def batch_request(path, param, keys):
         output = result["result"]["result"]
         printn(output.keys())
         first = output[list(output.keys())[0]]
-        if first["id"]:
+        if first:
             printn(first["id"])
         else:
             printn("no id")
