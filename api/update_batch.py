@@ -299,7 +299,7 @@ async def set_origins():
             
             #printn(row["origin"] is None)
             if str(origin) == "0":
-                origin = await get_origin(client, key)
+                origin = await get_origin(client, key, row["session"])
                 if origin is not None:
                     row["origin"] = origin 
                     r.hset(key, mapping=row)
