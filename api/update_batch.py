@@ -273,14 +273,15 @@ async def get_origin(client, chat, session):
         response = await client.get(url, timeout=60.0)
         response.raise_for_status()
     except httpx.HTTPError as exc:
-        printn(exc)
+        printn("Error: ", exc)
         return None
     json = response.json()
     messages = json["result"]["message"]
     #printn(messages)
     messages = dict(sorted(messages.items()))
-        
+       
     for key in messages.keys():
+        printn(key)
         text = messages[key]["text"]
         user = ""
         match = re.search("\[USER=(\d+) REPLACE\].*\[/USER\] начал работу с диалогом", text)
