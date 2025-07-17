@@ -278,5 +278,14 @@ async def get_origin(client, chat):
                 print(count, chunk)
                 count += 1
         '''
+async def set_origins():
+    r = redis.Redis.from_url(redis_url, decode_responses=True)
+    output, list = await get_redis_data(r)
+    async with httpx.AsyncClient() as client:
+        for row, key in zip(output, list):
+            if row["origin"]:
+                origin = await get_origin(client, key)
+                if origin:
+                    
 def printn(*args):
     print(f"#line {inspect.currentframe().f_back.f_lineno}: ", args)
