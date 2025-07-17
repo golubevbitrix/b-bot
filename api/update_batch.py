@@ -200,7 +200,7 @@ async def batch_request(path, param, keys):
         printn(output.keys())
         first = output[list(output.keys())[0]]
         if first:
-            printn(first)
+            printn("")
         else:
             printn("no id")
         #print(type(remaining))
@@ -226,8 +226,9 @@ async def update_chat_users():
         if user is None:
             row["user"] = owner
             line = result[key]["entity_id"].split('|')[1]
-            session = result[key]["entity_data_1"].split('|')[5]
+            
             row["line"] = line
+        session = result[key]["entity_data_1"].split('|')[5]
         row["session"] = session 
         r.hset(key, mapping=row)    
         
@@ -292,11 +293,9 @@ async def set_origins():
     r = redis.Redis.from_url(redis_url, decode_responses=True)
     async with httpx.AsyncClient() as client:
         for row, key in zip(output, list):
+            origin = "0"
             if "origin" in row:
-                origin = row["origin"]
-            else: 
-                origin = "0"
-            
+                origin = row["origin"]           
             #printn(row["origin"] is None)
             if str(origin) == "0":
                 origin = await get_origin(client, key, row["session"])
