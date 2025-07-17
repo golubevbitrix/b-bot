@@ -251,14 +251,32 @@ async def get_redis_data():
     printn(type(output))
     return output, list
 
-async def get_chat_history(chat, session):
+async def get_origin(client, chat):
     url = f"{api}imopenlines.session.history.get?CHAT_ID={chat}&SESSION_ID={session}"
-    async with httpx.AsyncClient() as client:
+    try:
+        response = await client.get(url, timeout=10.0)
+        response.raise_for_status()
+    except httpx.HTTPError as exc:
+        return None
+    json = response.json()
+    messages = json["result"]["message"]
+    keys = list(messages.keys()).sort()
+        
+    for key in keys:
+        text = messages["text"]
+        user = ""
+        match = re.match("\[USER=(\d+).*\[\\USER\] начал работу с диалогом", text)
+        if match:
+            user = match.group(0)
+            print(chat, "user: ", user)
+            return user
+                
+        '''
         async with client.stream('GET', url) as response:
             count = 0
             async for chunk in response.aiter_lines():
                 print(count, chunk)
                 count += 1
-
+        '''
 def printn(*args):
     print(f"#line {inspect.currentframe().f_back.f_lineno}: ", args)
