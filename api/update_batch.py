@@ -285,7 +285,7 @@ async def get_origin(client, chat):
         '''
 async def set_origins():
     #r = redis.Redis.from_url(redis_url, decode_responses=True)
-    output, list = await get_redis_data(r)
+    output, list = await get_redis_data()
     r = redis.Redis.from_url(redis_url, decode_responses=True)
     async with httpx.AsyncClient() as client:
         for row, key in zip(output, list):
