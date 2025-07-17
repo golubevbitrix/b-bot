@@ -220,7 +220,9 @@ async def update_chat_users():
     r = redis.Redis.from_url(redis_url, decode_responses=True)
     for row, key in zip(output, keys):
         #row["id"] = ke
+        printn(key, row)
         if key not in result:
+            printn(key, " skipped")
             continue
         owner = result[key]["owner"]
         
