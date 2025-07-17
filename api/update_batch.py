@@ -222,8 +222,8 @@ async def update_chat_users():
         #row["id"] = ke
         
         owner = result[key]["owner"]
-        user = row["user"]
-        if user is None:
+        
+        if user not in row:
             row["user"] = owner
             line = result[key]["entity_id"].split('|')[1]
             
