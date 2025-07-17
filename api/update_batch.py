@@ -276,6 +276,7 @@ async def get_origin(client, chat, session):
         return None
     json = response.json()
     messages = json["result"]["message"]
+    printn(messages)
     keys = list(messages.keys()).sort()
         
     for key in keys:
