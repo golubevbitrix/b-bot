@@ -131,9 +131,10 @@ async def handle_unsorted():
             #data = await get_data(chat)
             line = chat["entity_id"].split('|')[1]
             owner = chat["owner"]
+            session = chat["entity_data_1"].split('|')[5]
             printn(owner, line)
             if int(owner) != 0:
-               r.hset(id, mapping={"line": line, "user": owner, "origin": owner})
+               r.hset(id, mapping={"line": line, "user": owner, "session": session})
                r.hdel('unsorted', key)
                printn("origin set: ", id, owner)
             printn(key, "completed")
