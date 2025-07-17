@@ -183,7 +183,7 @@ async def batch_request(path, param, keys):
     if not isinstance(keys, list):
         keys = list(keys)
     remaining = []
-    printn(len(keys))
+    #printn(len(keys))
     if len(keys) > 50:
         remaining = keys[50:]
         keys = keys[:49]
@@ -197,18 +197,20 @@ async def batch_request(path, param, keys):
         result = response.json()
         #printn(len(result), type(result))
         output = result["result"]["result"]
-        printn(output.keys())
+        #printn(output.keys())
         first = output[list(output.keys())[0]]
+        '''
         if first:
             printn("")
         else:
             printn("no id")
+        '''
         #print(type(remaining))
         if len(remaining) > 0:
             remaining = await batch_request(path, param, remaining)
             output = output|remaining 
         #printn(len(list(output.keys())))
-    printn(len(output.keys()), output.keys())
+    #printn(len(output.keys()), output.keys())
     first = output[list(output.keys())[0]]
     
     return output
@@ -217,10 +219,11 @@ async def update_chat_users():
     output, keys = await get_redis_data()
     result = await batch_request("imopenlines.dialog.get","CHAT_ID", keys)
     printn(type(keys))
+    printn(len(list(result.keys())), result.keys())
     r = redis.Redis.from_url(redis_url, decode_responses=True)
     for row, key in zip(output, keys):
         #row["id"] = ke
-        printn(key, row)
+        #printn(key, row)
         if key not in result:
             printn(key, " skipped")
             continue
@@ -234,11 +237,12 @@ async def update_chat_users():
         session = result[key]["entity_data_1"].split('|')[5]
         row["session"] = session 
         r.hset(key, mapping=row)    
-        
+        '''
         try:
             printn(key, owner)
         except Exception as e:
             printn(row, e)
+        '''
     printn("update finished")
     #for row in output:
         #printn(row["id"], chat["owner"], row["user"])
