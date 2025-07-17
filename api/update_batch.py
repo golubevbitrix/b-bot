@@ -217,11 +217,16 @@ async def update_chat_users():
     output, keys = await get_redis_data()
     result = await batch_request("imopenlines.dialog.get","CHAT_ID", keys)
     printn(type(keys))
+    r = redis.Redis.from_url(redis_url, decode_responses=True)
     for row, key in zip(output, keys):
         #row["id"] = ke
         
         owner = result[key]["owner"]
         user = row["user"]
+        if user is None:
+            row["user"] = owner
+            line = result[key]["owner"].split('|')[1]
+            row["line"] = line
         
         try:
             printn(key, owner, user)
