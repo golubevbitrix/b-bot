@@ -250,6 +250,12 @@ async def get_redis_data():
     output = pipeline.execute()
     printn(type(output))
     return output, list
-    
+
+async def get_chat_history(chat, session):
+    async with httpx.AsyncClient() as client:
+        async with client.stream('GET', 'https://www.example.com/') as response:
+            async for chunk in response.aiter_text(10):
+                print(chunk)
+
 def printn(*args):
     print(f"#line {inspect.currentframe().f_back.f_lineno}: ", args)
