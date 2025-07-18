@@ -64,14 +64,14 @@ async def redis_update_handler():
                 for user, status in queue.items():
                     #printn(user, status, row["user"])
                     if status and user != row["user"]:
-                        #await update_chat(key, row["line"], user)
-                        #await change_user(key, user)
+                        await update_chat(key, row["line"], user)
+                        await change_user(key, user)
                         chats_to_change[key] = {"user":user, "line": row["line"]}
                         
             elif "origin" in row:
                 if row["user"] != row["origin"]:
-                    #await update_chat(key, row["line"], row["origin"])
-                    #await change_user(key, row["origin"]) 
+                    await update_chat(key, row["line"], row["origin"])
+                    await change_user(key, row["origin"]) 
                     chats_to_change[key] = {"user":user, "line": row["line"]}
                 else:
                     printn("user is origin")
