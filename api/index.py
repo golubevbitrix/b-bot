@@ -48,9 +48,9 @@ async def update(request: Request):
         print("Exception: ", e)
 
 @app.get('/api/chat')
-async def update(request: Request, chat: str, session: str):
+async def update(request: Request, chat: str):
     try:
-        data = await get_chat_history(chat, session)
+        #data = await get_chat_history(chat, session)
         data = await get_saved_chat(chat)
     except Exception as e:
         data = e
