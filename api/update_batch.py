@@ -49,7 +49,7 @@ async def redis_update_handler():
     users_to_change = {}
     chats_to_change = {}
     for row, key in zip(output, list):
-        excluded = "false'
+        excluded = "false"
         printn(key,row)
         if "line" not in row:
             printn("skipped for no line in the row")
