@@ -84,6 +84,8 @@ async def add_handler(request):
   chat = data["chat"]
   print("message text: ")
   text = re.search('\[message\]\[text\]=(.+?)&', request, re.DOTALL).group(1).lower()
+  
+  
   print(text)
   #if text
   emojis = emoji.emoji_list(text)
@@ -144,3 +146,38 @@ async def delete_chat(chat):
     print(response)
   await pool.close()
   print('chat ', chat, ' deleted')
+
+async def handle_set_origin_message(text , chat):
+  r = redis.Redis.from_url(redis_url)
+  message = re.search('#ORIGIN##\d+', text)
+  if message:
+    if message.group(0) == text:    
+      user = message.group(1)
+      data = r.hgetall(chat)
+      data["origin"] = user
+      r.hset(chat, mapping=data)
+
+async def handle_exclude_message(text, chat):
+  r = redis.Redis.from_url(redis_url)
+  message = re.search('#EXCLUDE##', text)  
+  if message:
+    if message.group(0) == text:
+      data = r.hgetall(chat)
+      data["excluded"] = "true"
+      r.hset(chat, mapping=data)
+
+async def handle_include_message(text, chat):
+  r = redis.Redis.from_url(redis_url)
+  message = re.search('#INCLUDE##', text)  
+  timestamp = str(int(time.time()))
+  if message:
+    if message.group(0) == text:
+      data = r.hgetall(chat)
+      if "excluded" in data:
+        data["excluded"] = "false"
+        r.hset(chat, mapping=data)
+      elif "user" not in data:
+        r.hset('unsorted', timestamp + str(random.randint(0,100)), chat)
+  
+  
+  
