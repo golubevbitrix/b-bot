@@ -80,11 +80,13 @@ async def update_chat(chat, line, user):
 async def add_handler(request):
   code = chat_code(request)
   data = await chat_id(code)
-  return 
+  #return 
   chat = data["chat"]
   print("message text: ")
   text = re.search('\[message\]\[text\]=(.+?)&', request, re.DOTALL).group(1).lower()
-  
+  await handle_set_origin_message(text, chat)
+  await handle_exclude_message(text, chat)
+  await handle_include_message(text, chat)
   
   print(text)
   #if text
