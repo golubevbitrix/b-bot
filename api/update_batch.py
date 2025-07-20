@@ -27,23 +27,7 @@ async def redis_update_handler():
     users = await get_users(lines)
     statuses = await get_statuses(users)
     printn(users, statuses)
-    '''
-    keys = r.keys()
-    list = []
-    unsorted = None
-    pipeline = r.pipeline()
-    for key in keys:
-        if key == 'unsorted':
-            continue 
-            #await handle_unsorted()
-        elif key.find('-') == -1:
-            list.append(key)
-            pipeline.hgetall(key)
-    string = "MGET " + ', '.join(list)
-    printn(string)
-    mget_time = int(round(time.time()*10000))
-    output = pipeline.execute()
-    '''
+
     output, list = await get_redis_data()
     #printn('pipeline execution time: ', int(round(time.time()*10000)) - mget_time)
     users_to_change = {}
@@ -150,18 +134,7 @@ async def handle_unsorted():
 async def get_data(chats):
     result = await batch_request('imopenlines.dialog.get', 'CHAT_ID', chats)
     return result
-    '''
-    async with httpx.AsyncClient() as client:
-        data = {"CHAT_ID": chat}
-        printn(data)
-        try:
-            response = await client.post(api +'imopenlines.dialog.get', data=data)
-            response = response.json()
-        
-            return(response["result"])
-        except Exception as e:
-            printn("dialog get exception: ", e)
-    '''      
+
 async def get_saved_chat(chat):
     r = redis.Redis.from_url(redis_url, decode_responses=True)
     printn(chat)
@@ -206,13 +179,7 @@ async def batch_request(path, param, keys):
         output = result["result"]["result"]
         #printn(output.keys())
         first = output[list(output.keys())[0]]
-        '''
-        if first:
-            printn("")
-        else:
-            printn("no id")
-        '''
-        #print(type(remaining))
+
         if len(remaining) > 0:
             remaining = await batch_request(path, param, remaining)
             output = output|remaining 
@@ -244,19 +211,14 @@ async def update_chat_users():
         session = result[key]["entity_data_1"].split('|')[5]
         row["session"] = session 
         r.hset(key, mapping=row)    
-        '''
-        try:
-            printn(key, owner)
-        except Exception as e:
-            printn(row, e)
-        '''
+
     printn("update finished")
     #for row in output:
         #printn(row["id"], chat["owner"], row["user"])
 
 async def get_redis_data():
     r = redis.Redis.from_url(redis_url, decode_responses=True)
-    keys = r.keys()
+    keys = sorted(r.keys())
     list = []
     unsorted = None
     pipeline = r.pipeline()
