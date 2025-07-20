@@ -34,7 +34,7 @@ async def redis_update_handler():
     chats_to_change = {}
     for row, key in zip(output, list):
         excluded = "false"
-        printn(key,row)
+    
         if "line" not in row:
             printn("skipped for no line in the row")
             continue     
@@ -50,7 +50,7 @@ async def redis_update_handler():
                 queue[user] = statuses[user]
             if False in queue.values():
                 for user, status in queue.items():
-                    #printn(user, status, row["user"])
+                    printn(user, status, row["user"])
                     if status and user != row["user"]:
                         await update_chat(key, row["line"], user)
                         await change_user(key, user)
