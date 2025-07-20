@@ -48,7 +48,9 @@ async def redis_update_handler():
         if "origin" in row and len(queue) > 1 and excluded == "true":
             for user in queue.keys():
                 queue[user] = statuses[user]
+            printn(queue)
             if False in queue.values():
+                printn(queue.values())
                 for user, status in queue.items():
                     printn(user, status, row["user"])
                     if status and user != row["user"]:
