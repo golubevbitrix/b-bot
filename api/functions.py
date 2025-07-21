@@ -82,6 +82,12 @@ async def add_handler(request):
   data = await chat_id(code)
   #return 
   chat = data["chat"]
+  r = redis.Redis.from_url(redis_url)
+  data = r.hgetall(chat)
+  print("chat data: ", data, not data)
+  if not data:
+    timestamp = str(int(time.time()))
+    r.hset('unsorted', timestamp + str(random.randint(0,100)), chat)
   print("message text: ")
   text = re.search('\[message\]\[text\]=(.+?)&', request, re.DOTALL).group(1)
   await handle_set_origin_message(text, chat)
@@ -90,7 +96,7 @@ async def add_handler(request):
   
   print(text)
   return
-  
+  '''
   #if text
   emojis = emoji.emoji_list(text)
   for i in emojis:
@@ -118,7 +124,7 @@ async def add_handler(request):
     print('usee: ', user)
     if user != '0':
         await update_chat(chat, line, user)
-    
+    '''
 async def finish_handler(request):
   chat = re.search('\[chat_id\]=(.+?)&', request)
   if chat:
