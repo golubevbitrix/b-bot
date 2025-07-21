@@ -90,6 +90,7 @@ async def add_handler(request):
     r.hset('unsorted', timestamp + str(random.randint(0,100)), chat)
   print("message text: ")
   text = re.search('\[message\]\[text\]=(.+?)&', request, re.DOTALL).group(1)
+  print("text: ", text)
   await handle_set_origin_message(text, chat)
   await handle_exclude_message(text, chat)
   await handle_include_message(text, chat)
