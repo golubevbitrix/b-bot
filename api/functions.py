@@ -83,7 +83,7 @@ async def add_handler(request):
   #return 
   chat = data["chat"]
   print("message text: ")
-  text = re.search('\[message\]\[text\]=(.+?)&', request, re.DOTALL).group(1).lower()
+  text = re.search('\[message\]\[text\]=(.+?)&', request, re.DOTALL).group(1)
   await handle_set_origin_message(text, chat)
   await handle_exclude_message(text, chat)
   await handle_include_message(text, chat)
