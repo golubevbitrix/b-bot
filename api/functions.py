@@ -160,7 +160,7 @@ async def delete_chat(chat):
 
 async def handle_set_origin_message(text , chat):
   r = redis.Redis.from_url(redis_url)
-  message = re.search('#ORIGIN##\d+', text)
+  message = re.search('#ORIGIN##(\d+)', text)
   if message:
     if message.group(0) == text:    
       user = message.group(1)
