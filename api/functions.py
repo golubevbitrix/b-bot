@@ -89,6 +89,8 @@ async def add_handler(request):
   await handle_include_message(text, chat)
   
   print(text)
+  return
+  
   #if text
   emojis = emoji.emoji_list(text)
   for i in emojis:
