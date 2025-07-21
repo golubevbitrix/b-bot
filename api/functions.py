@@ -171,9 +171,12 @@ async def handle_exclude_message(text, chat):
 
 async def handle_include_message(text, chat):
   r = redis.Redis.from_url(redis_url)
-  message = re.search('#INCLUDE##', text)  
+  message = re.search('#INCLUDE##', text) 
+  print("include check: ", chat, text)
+  print(message)
   timestamp = str(int(time.time()))
   if message:
+    print(message.group(0))
     if message.group(0) == text:
       data = r.hgetall(chat)
       print(data)
