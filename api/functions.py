@@ -166,6 +166,7 @@ async def handle_exclude_message(text, chat):
     if message.group(0) == text:
       data = r.hgetall(chat)
       data["excluded"] = "true"
+      print(data)
       r.hset(chat, mapping=data)
 
 async def handle_include_message(text, chat):
@@ -175,6 +176,7 @@ async def handle_include_message(text, chat):
   if message:
     if message.group(0) == text:
       data = r.hgetall(chat)
+      print(data)
       if "excluded" in data:
         data["excluded"] = "false"
         r.hset(chat, mapping=data)
