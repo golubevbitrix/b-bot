@@ -225,7 +225,7 @@ async def get_redis_data():
     unsorted = None
     pipeline = r.pipeline()
     for key in keys:
-        if key == 'unsorted':
+        if key == 'unsorted' or key == 'token':
             continue 
             #await handle_unsorted()
         elif key.find('-') == -1:
