@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 #from tgbot.main import tgbot
 from api.functions import hook_handler
 from api.check import update_handler
-from api.update_batch import redis_update_handler, get_saved_chat, handle_unsorted, update_chat_users, set_origins
+from api.update_batch import redis_update_handler, get_saved_chat, handle_unsorted, update_chat_users, set_origins, show_statuses
 from urllib.parse import unquote, urlparse
 
 app = FastAPI()
@@ -74,5 +74,12 @@ async def update(request: Request):
 async def update(request: Request):
     try:
         await set_origins()
+    except Exception as e:
+        print(e)
+        
+@app.get('/api/stasuses')
+async def statuses(request: Request):
+    try:
+        await show_statuses()
     except Exception as e:
         print(e)
