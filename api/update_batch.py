@@ -293,3 +293,10 @@ async def set_origins():
                     
 def printn(*args):
     print(f"#line {inspect.currentframe().f_back.f_lineno}: ", args)
+
+async def show_statuses():
+    timestamp = int(time.time())
+    lines = await get_lines(timestamp)
+    users = await get_users(lines)
+    statuses = await get_statuses(users)
+    return statuses 
