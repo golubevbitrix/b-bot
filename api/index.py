@@ -77,9 +77,11 @@ async def update(request: Request):
     except Exception as e:
         print(e)
         
-@app.get('/api/stasuses')
+@app.get('/api/statuses')
 async def statuses(request: Request):
     try:
-        await show_statuses()
+        output = await show_statuses()
+        return output
     except Exception as e:
         print(e)
+        return e
