@@ -54,15 +54,19 @@ async def redis_update_handler():
                 for user, status in queue.items():
                     printn(user, status, row["user"])
                     if status and user != row["user"]:
-                        await update_chat(key, row["line"], user)
-                        await change_user(key, user)
-                        chats_to_change[key] = {"user":user, "line": row["line"]}
+                        users = await user_count(key)
+                        if users < 3:
+                          await update_chat(key, row["line"], user)
+                          await change_user(key, user)
+                          chats_to_change[key] = {"user":user, "line": row["line"]}
                         
             elif "origin" in row:
                 if row["user"] != row["origin"]:
-                    await update_chat(key, row["line"], row["origin"])
-                    await change_user(key, row["origin"]) 
-                    chats_to_change[key] = {"user":user, "line": row["line"]}
+                    users = await user_count(key)
+                    if users < 3:
+                      await update_chat(key, row["line"], row["origin"])
+                      await change_user(key, row["origin"]) 
+                      chats_to_change[key] = {"user":user, "line": row["line"]}
                 else:
                     printn("user is origin")
 
@@ -300,3 +304,13 @@ async def show_statuses():
     users = await get_users(lines)
     statuses = await get_statuses(users)
     return statuses 
+
+async def user_count(chat):
+  async with httpx.AsyncClient() as client:
+    data = {"CHAT_ID": chat}
+    response = await client.post(api +'imopenlines.dialog.get', data=data)
+    response = response.json()
+    print('chatId: ', response)
+    connector = response["result"]["entity_id"].split("|")[0]
+    return int(response["result"]["user_counter"])
+    
