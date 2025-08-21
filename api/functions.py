@@ -57,7 +57,7 @@ async def chat_id(code):
     response = response.json()
     print('chatId: ', response)
     connector = response["result"]["entity_id"].split("|")[0]
-    return {"chat": str(response["result"]["id"]), "user": str(response["result"]["owner"]), "connector": connector,"usercount": response["result"]["usercount"] }
+    return {"chat": str(response["result"]["id"]), "user": str(response["result"]["owner"]), "connector": connector }
     
 async def update_chat(chat, line, user):
     pool = await asyncpg.create_pool(connection_string)
